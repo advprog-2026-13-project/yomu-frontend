@@ -34,3 +34,4 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=.
             -Dsonar.exclusions=**/.next/**,**/node_modules/**,**/out/**,**/dist/**
+            -Dsonar.coverage.exclusions=**/*.txt,**/*.css,src/app/**,src/modules/**
