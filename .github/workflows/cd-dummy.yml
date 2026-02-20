@@ -1,0 +1,25 @@
+name: Dummy CD (Guarded)
+
+on:
+  push:
+    branches: [ "staging", "main" ]
+  workflow_dispatch:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [ quality-gate ]
+    steps:
+      - run: echo "Dummy deploy executed because quality-gate passed."
