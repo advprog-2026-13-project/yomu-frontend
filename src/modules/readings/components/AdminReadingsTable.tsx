@@ -57,8 +57,8 @@ export default function AdminReadingsTable() {
                 </Link>
             </div>
 
-            {readings.length === 0 ? (
-                <p className="text-gray-500 text-center py-6">Belum ada bacaan yang ditambahkan.</p>
+            {!Array.isArray(readings) || readings.length === 0 ? (
+                <p className="text-gray-500 text-center py-6">Belum ada bacaan yang ditambahkan atau terjadi error.</p>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">

@@ -8,8 +8,13 @@ import {
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api';
 
 export const api = {
-    getAdminReadings: (): Promise<Reading[]> =>
-        fetch(`${BASE_URL}/admin/readings`).then(res => res.json()),
+    getAdminReadings: async (): Promise<Reading[]> => {
+        const res = await fetch(`${BASE_URL}/admin/readings`);
+        if (!res.ok) {
+            throw new Error(`Gagal mengambil data. Status HTTP: ${res.status}`);
+        }
+        return res.json();
+    },
 
     getStudentReadings: (studentId: string): Promise<Reading[]> =>
         fetch(`${BASE_URL}/student/readings?studentId=${studentId}`).then(res => res.json()),
