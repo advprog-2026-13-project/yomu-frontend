@@ -8,7 +8,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ message: "Missing Authorization header" }, { status: 401 });
     }
 
-    const res = await fetch(`${backend}/api/me`, {
+    const res = await fetch(`${backend}/api/auth/me`, {
         method: "GET",
         headers: { Authorization: auth },
         cache: "no-store",
@@ -26,7 +26,7 @@ export async function PATCH(req: Request) {
 
     const body = await req.json();
 
-    const res = await fetch(`${backend}/api/me`, {
+    const res = await fetch(`${backend}/api/auth/me`, {
         method: "PATCH",
         headers: {
             "Authorization": auth,
@@ -45,7 +45,7 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ message: "Missing Authorization header" }, { status: 401 });
     }
 
-    const res = await fetch(`${backend}/api/me`, {
+    const res = await fetch(`${backend}/api/auth/me`, {
         method: "DELETE",
         headers: { Authorization: auth },
     });
