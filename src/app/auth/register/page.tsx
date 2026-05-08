@@ -36,6 +36,7 @@ export default function RegisterPage() {
 
     const handleGoogleSuccess = async (credentialResponse: { credential?: string }) => {
         clearError();
+        if (!credentialResponse.credential) return;
         await loginWithGoogle(credentialResponse.credential);
     };
 
