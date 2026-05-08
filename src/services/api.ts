@@ -1,3 +1,5 @@
+import { Question, QuestionPayload } from "@/types/quiz";
+
 import {
     Reading,
     QuestionResponse,
@@ -52,4 +54,24 @@ export const api = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         }).then(res => res.json()),
+
+    getAdminQuestions: (readingId: string): Promise<Question[]> =>
+        fetch(`${BASE_URL}/admin/readings/${readingId}/questions`).then(res => {
+            if (!res.ok) throw new Error("Gagal mengambil soal");
+            return res.json();
+        }),
+
+    createQuestion: (readingId: string, payload: QuestionPayload): Promise<Question> =>
+        fetch(`${BASE_URL}/admin/readings/${readingId}/questions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        }).then(res => res.json()),
+
+    deleteQuestion: (readingId: string, questionId: string): Promise<void> =>
+        fetch(`${BASE_URL}/admin/readings/${readingId}/questions/${questionId}`, {
+            method: 'DELETE',
+        }).then(res => {
+            if (!res.ok) throw new Error("Gagal menghapus soal");
+        }),
 };
