@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     console.log("LOGIN -> backend status:", res.status);
     console.log("LOGIN -> backend body:", text);
 
-    let data: any = {};
+    let data: Record<string, unknown> = {};
     try {
         data = JSON.parse(text);
     } catch {
