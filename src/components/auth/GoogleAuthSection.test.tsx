@@ -76,4 +76,24 @@ describe("GoogleAuthSection", () => {
     expect(alertSpy).toHaveBeenCalledWith("Google Login Failed");
     alertSpy.mockRestore();
   });
+
+  it("calls loginWithGoogle when credential is present", async () => {
+    render(<GoogleAuthSection />);
+
+    const props = MockGoogleLogin.mock.calls[0][0];
+    await props.onSuccess({ credential: "google-credential" });
+
+    expect(mockClearError).toHaveBeenCalled();
+    expect(mockLoginWithGoogle).toHaveBeenCalledWith("google-credential");
+  });
+
+  it("does not call loginWithGoogle when credential is missing", async () => {
+    render(<GoogleAuthSection />);
+
+    const props = MockGoogleLogin.mock.calls[0][0];
+    await props.onSuccess({});
+
+    expect(mockClearError).toHaveBeenCalled();
+    expect(mockLoginWithGoogle).not.toHaveBeenCalled();
+  });
 });

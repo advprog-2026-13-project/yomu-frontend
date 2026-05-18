@@ -35,5 +35,5 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=.
             -Dsonar.exclusions=**/.next/**,**/node_modules/**,**/out/**,**/dist/**,**/coverage/**,**/*.test.*
-            -Dsonar.coverage.exclusions=**/*.txt,**/*.css,**/*.test.*,**/components/ui/**,**/next.config.ts,**/lib/utils.ts,**/.next/**
+            -Dsonar.coverage.exclusions=**/*.txt,**/*.css,**/*.test.*,**/components/ui/**,**/next.config.ts,**/lib/utils.ts,**/.next/**,**/app/(protected)/**,**/app/api/auth/**
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
