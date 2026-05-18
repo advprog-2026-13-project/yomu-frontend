@@ -42,10 +42,10 @@ export default function ProfilePage() {
     };
 
     return (
-        <div className="yomu-page-container flex items-center justify-center">
+        <div className="flex min-h-[60vh] items-center justify-center p-4">
             <Card className="w-full max-w-lg yomu-card">
                 <CardHeader>
-                    <CardTitle className="font-serif text-yomu-foreground">Profil Saya</CardTitle>
+                    <CardTitle className="font-serif text-blue-950">Profil Saya</CardTitle>
                     <CardDescription>Kelola informasi akun kamu</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -70,10 +70,10 @@ export default function ProfilePage() {
                                 <span>{user.email || "-"}</span>
                                 <span className="font-medium">Phone:</span>
                                 <span>{user.phoneNumber || "-"}</span>
-                                <span className="font-medium text-yomu-accent-dark">Role:</span>
-                                <span className="text-yomu-accent-dark font-semibold">{user.role}</span>
+                                <span className="font-medium text-amber-600">Role:</span>
+                                <span className="text-amber-600 font-semibold">{user.role}</span>
                             </div>
-                            <Button onClick={startEditing} className="bg-yomu-primary text-white hover:bg-yomu-primary-dark mt-4">Edit Profil</Button>
+                            <Button onClick={startEditing} className="yomu-btn-primary mt-4">Edit Profil</Button>
                         </div>
                     )}
 
@@ -113,7 +113,7 @@ export default function ProfilePage() {
                                 />
                             </div>
                             <div className="flex gap-2">
-                                <Button type="submit" disabled={loading} className="bg-yomu-primary text-white hover:bg-yomu-primary-dark">
+                                <Button type="submit" disabled={loading} className="yomu-btn-primary">
                                     {loading ? "Menyimpan..." : "Simpan"}
                                 </Button>
                                 <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
