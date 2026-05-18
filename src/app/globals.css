@@ -57,6 +57,22 @@ body {
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* Yomu Design Tokens */
+    --color-yomu-primary: #1D9E75;
+    --color-yomu-primary-light: #E1F5EE;
+    --color-yomu-primary-dark: #085041;
+    --color-yomu-accent: #EF9F27;
+    --color-yomu-accent-light: #FAEEDA;
+    --color-yomu-accent-dark: #633806;
+    --color-yomu-surface: #FFFFFF;
+    --color-yomu-background: #F1EFE8;
+    --color-yomu-foreground: #2C2C2A;
+    --color-yomu-text-secondary: #5F5E5A;
+    --color-yomu-border: #D3D1C7;
+    --color-yomu-success: #639922;
+    --color-yomu-destructive: #E24B4A;
+    --color-yomu-info: #378ADD;
 }
 
 :root {
@@ -138,4 +154,37 @@ body {
   html {
     @apply font-sans;
     }
+}
+
+@layer components {
+  /* Yomu Layout Classes */
+  .yomu-page-container {
+    @apply max-w-[1280px] mx-auto px-8 py-6 bg-yomu-background min-h-screen text-yomu-foreground;
+  }
+  
+  /* Yomu Typography Classes */
+  .yomu-heading-1 {
+    @apply text-2xl font-medium font-heading flex items-center gap-3 text-yomu-foreground;
+  }
+  
+  .yomu-heading-2 {
+    @apply text-xl font-medium font-heading flex items-center gap-2 text-yomu-foreground;
+  }
+  
+  .yomu-heading-3 {
+    @apply text-lg font-medium font-heading text-yomu-foreground;
+  }
+  
+  .yomu-text-muted {
+    @apply text-sm text-yomu-text-secondary;
+  }
+  
+  /* Yomu Card Utilities */
+  .yomu-card {
+    @apply bg-yomu-surface rounded-2xl border-2 border-yomu-border shadow-sm;
+  }
+  
+  .yomu-card-value {
+    @apply text-2xl font-bold font-heading;
+  }
 }
