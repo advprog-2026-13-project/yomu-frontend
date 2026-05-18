@@ -61,14 +61,14 @@ export default function ReadingsPage() {
     }, []);
 
     if (loading) {
-        return <div className="flex min-h-[60vh] items-center justify-center p-4">Memuat daftar bacaan...</div>;
+        return <div className="yomu-page-container flex items-center justify-center">Memuat daftar bacaan...</div>;
     }
 
     return (
         <div className="yomu-page-container">
             <div className="space-y-2">
                 <h1 className="yomu-heading-1">
-                    <BookOpen className="h-8 w-8 text-blue-700" />
+                    <BookOpen className="h-8 w-8 text-yomu-primary" />
                     Katalog Bacaan
                 </h1>
                 <p className="yomu-text-muted">Pilih artikel, baca materinya, dan selesaikan kuis interaktifnya!</p>
@@ -80,8 +80,8 @@ export default function ReadingsPage() {
                         <Card key={reading.id} className="yomu-card group overflow-hidden">
                             <div className="flex flex-col sm:flex-row">
                                 {/* Thumbnail Placeholder */}
-                                <div className="sm:w-48 bg-slate-100 flex-shrink-0 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-blue-50">
-                                    <BookOpen className={`h-12 w-12 ${reading.isCompleted ? 'text-emerald-300' : 'text-blue-200 group-hover:text-blue-400 transition-colors'}`} />
+                                <div className="sm:w-48 bg-yomu-surface flex-shrink-0 flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-yomu-border">
+                                    <BookOpen className={`h-12 w-12 ${reading.isCompleted ? 'text-yomu-success' : 'text-yomu-border group-hover:text-yomu-primary transition-colors'}`} />
                                 </div>
                                 
                                 <div className="flex-1 flex flex-col">
@@ -89,21 +89,21 @@ export default function ReadingsPage() {
                                         <div className="flex justify-between items-start">
                                             <div className="space-y-1">
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <span className="yomu-badge yomu-badge-category">
+                                                    <span className="px-2.5 py-1 text-xs font-semibold rounded-md bg-yomu-primary-light text-yomu-primary">
                                                         {reading.category}
                                                     </span>
-                                                    <span className={`yomu-badge ${
-                                                        reading.difficultyLevel === 'Pemula' ? 'yomu-badge-beginner' :
-                                                        reading.difficultyLevel === 'Menengah' ? 'yomu-badge-intermediate' :
-                                                        'yomu-badge-advanced'
+                                                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-md ${
+                                                        reading.difficultyLevel === 'Pemula' ? 'bg-yomu-success/20 text-yomu-success' :
+                                                        reading.difficultyLevel === 'Menengah' ? 'bg-yomu-accent-light text-yomu-accent' :
+                                                        'bg-yomu-destructive/20 text-yomu-destructive'
                                                     }`}>
                                                         {reading.difficultyLevel}
                                                     </span>
                                                 </div>
-                                                <CardTitle className="text-xl font-serif text-blue-950 group-hover:text-blue-700 transition-colors">
+                                                <CardTitle className="text-xl font-serif text-yomu-foreground group-hover:text-yomu-primary transition-colors">
                                                     {reading.title}
                                                 </CardTitle>
-                                                <CardDescription className="flex items-center gap-4 text-sm">
+                                                <CardDescription className="flex items-center gap-4 text-sm text-yomu-text-secondary">
                                                     <span>Oleh {reading.author}</span>
                                                     <span className="flex items-center gap-1">
                                                         <Clock className="h-3 w-3" />
@@ -113,21 +113,21 @@ export default function ReadingsPage() {
                                             </div>
                                         </div>
                                     </CardHeader>
-                                    <CardContent className="text-sm text-slate-600 flex-1">
+                                    <CardContent className="text-sm text-yomu-text-secondary flex-1">
                                         {reading.description}
                                     </CardContent>
                                     <CardFooter className="pt-0 justify-between items-center">
                                         {reading.isCompleted ? (
-                                            <div className="text-sm font-medium text-emerald-600 flex items-center gap-1">
+                                            <div className="text-sm font-medium text-yomu-success flex items-center gap-1">
                                                 <BookOpen className="h-4 w-4" />
                                                 Selesai Dibaca
                                             </div>
                                         ) : (
-                                            <div className="text-sm font-medium text-slate-400">
+                                            <div className="text-sm font-medium text-yomu-text-secondary">
                                                 Belum dibaca
                                             </div>
                                         )}
-                                        <Button asChild className="yomu-btn-primary rounded-full pr-2">
+                                        <Button asChild className="bg-yomu-primary text-white hover:bg-yomu-primary-dark rounded-full pr-2">
                                             <Link href={`/readings/${reading.id}`}>
                                                 {reading.isCompleted ? "Baca Ulang" : "Mulai Membaca"}
                                                 <ChevronRight className="h-4 w-4 ml-1" />
@@ -141,15 +141,15 @@ export default function ReadingsPage() {
                 </div>
 
                 <div className="space-y-6">
-                    <Card className="yomu-card bg-blue-50/50">
+                    <Card className="yomu-card bg-yomu-primary-light/50">
                         <CardHeader>
-                            <CardTitle className="font-serif text-lg text-blue-950">Lanjutkan Terakhir</CardTitle>
+                            <CardTitle className="font-serif text-lg text-yomu-foreground">Lanjutkan Terakhir</CardTitle>
                         </CardHeader>
                         <CardContent className="flex flex-col items-center justify-center py-6 text-center">
-                            <PlayCircle className="h-12 w-12 text-blue-300 mb-3" />
-                            <h3 className="font-medium text-blue-950">Mendeteksi Bias dalam Berita</h3>
-                            <p className="text-sm text-slate-500 mb-4">Paragraf 3 / Kuis 1</p>
-                            <Button variant="outline" className="w-full border-blue-200 text-blue-700 hover:bg-blue-100">
+                            <PlayCircle className="h-12 w-12 text-yomu-primary/50 mb-3" />
+                            <h3 className="font-medium text-yomu-foreground">Mendeteksi Bias dalam Berita</h3>
+                            <p className="text-sm text-yomu-text-secondary mb-4">Paragraf 3 / Kuis 1</p>
+                            <Button variant="outline" className="w-full border-yomu-primary/30 text-yomu-primary hover:bg-yomu-primary-light">
                                 Lanjutkan
                             </Button>
                         </CardContent>
@@ -157,20 +157,20 @@ export default function ReadingsPage() {
 
                     <Card className="yomu-card">
                         <CardHeader>
-                            <CardTitle className="font-serif text-lg text-blue-950">Statistik Bacaan</CardTitle>
+                            <CardTitle className="font-serif text-lg text-yomu-foreground">Statistik Bacaan</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex justify-between items-center">
                                 <span className="yomu-text-muted text-sm">Diselesaikan</span>
-                                <span className="font-bold text-blue-950">12 Artikel</span>
+                                <span className="font-bold text-yomu-foreground">12 Artikel</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="yomu-text-muted text-sm">Waktu Membaca</span>
-                                <span className="font-bold text-blue-950">4.5 Jam</span>
+                                <span className="font-bold text-yomu-foreground">4.5 Jam</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="yomu-text-muted text-sm">Akurasi Kuis</span>
-                                <span className="font-bold text-emerald-600">85%</span>
+                                <span className="font-bold text-yomu-success">85%</span>
                             </div>
                         </CardContent>
                     </Card>
