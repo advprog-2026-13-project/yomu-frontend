@@ -61,17 +61,17 @@ export default function AchievementsPage() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                 <div className="space-y-2">
                     <h1 className="yomu-heading-1">
-                        <Trophy className="h-8 w-8 text-amber-500" />
+                        <Trophy className="h-8 w-8 text-yomu-accent" />
                         Pencapaian & Misi
                     </h1>
                     <p className="yomu-text-muted">Selesaikan misi untuk mendapatkan poin dan naikkan rank ligamu!</p>
                 </div>
                 <div className="yomu-card p-4 flex items-center gap-4 border-0">
-                    <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
-                        <Star className="h-6 w-6 text-amber-600" />
+                    <div className="w-12 h-12 bg-yomu-accent-light rounded-full flex items-center justify-center">
+                        <Star className="h-6 w-6 text-yomu-accent-dark" />
                     </div>
                     <div>
-                        <p className="text-sm font-medium text-slate-600">Total Poin</p>
+                        <p className="text-sm font-medium text-yomu-text-secondary">Total Poin</p>
                         <p className="yomu-card-value">1,250</p>
                     </div>
                 </div>
@@ -80,22 +80,22 @@ export default function AchievementsPage() {
             {/* Misi Harian */}
             <div className="space-y-4">
                 <h2 className="yomu-heading-2">
-                    <Target className="h-6 w-6 text-emerald-600" />
+                    <Target className="h-6 w-6 text-yomu-success" />
                     Misi Harian
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {dailyMissions.map((mission) => (
-                        <Card key={mission.missionId} className={`yomu-card border-blue-100 transition-all ${mission.isCompleted ? 'bg-emerald-50 border-emerald-200' : 'bg-white'}`}>
+                        <Card key={mission.missionId} className={`yomu-card border-yomu-border transition-all ${mission.isCompleted ? 'bg-yomu-success/10 border-yomu-success/30' : 'bg-yomu-surface'}`}>
                             <CardHeader className="pb-2">
                                 <div className="flex justify-between items-start">
-                                    <CardTitle className="text-md font-medium text-blue-950">{mission.title}</CardTitle>
-                                    {mission.isCompleted && <CheckCircle2 className="h-5 w-5 text-emerald-600" />}
+                                    <CardTitle className="text-md font-medium text-yomu-foreground">{mission.title}</CardTitle>
+                                    {mission.isCompleted && <CheckCircle2 className="h-5 w-5 text-yomu-success" />}
                                 </div>
-                                <CardDescription className="text-amber-600 font-medium">+{mission.pointsReward} Pts</CardDescription>
+                                <CardDescription className="text-yomu-accent-dark font-medium">+{mission.pointsReward} Pts</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-2">
-                                    <div className="flex justify-between text-xs text-slate-600">
+                                    <div className="flex justify-between text-xs text-yomu-text-secondary">
                                         <span>Progress</span>
                                         <span>{mission.currentProgress} / {mission.targetProgress}</span>
                                     </div>
@@ -110,27 +110,27 @@ export default function AchievementsPage() {
             {/* Badges / Pencapaian Utama */}
             <div className="space-y-4 pt-4">
                 <h2 className="yomu-heading-2">
-                    <Award className="h-6 w-6 text-blue-700" />
+                    <Award className="h-6 w-6 text-yomu-primary" />
                     Badge Koleksi
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {achievements.map((ach) => (
-                        <div key={ach.achievementId} className={`flex items-center gap-4 p-4 rounded-2xl border ${ach.isCompleted ? 'bg-white border-blue-200 shadow-[0_4px_20px_rgb(0,0,0,0.03)]' : 'bg-slate-50 border-slate-200 opacity-70'}`}>
-                            <div className={`w-16 h-16 rounded-full flex items-center justify-center shrink-0 ${ach.isCompleted ? 'bg-blue-100' : 'bg-slate-200'}`}>
+                        <div key={ach.achievementId} className={`flex items-center gap-4 p-4 rounded-2xl border ${ach.isCompleted ? 'bg-yomu-surface border-yomu-primary/30 shadow-[0_4px_20px_rgb(0,0,0,0.03)]' : 'bg-yomu-background border-yomu-border opacity-70'}`}>
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center shrink-0 ${ach.isCompleted ? 'bg-yomu-primary-light' : 'bg-yomu-border'}`}>
                                 {ach.isCompleted ? (
-                                    <Trophy className="h-8 w-8 text-blue-700" />
+                                    <Trophy className="h-8 w-8 text-yomu-primary" />
                                 ) : (
-                                    <Lock className="h-6 w-6 text-slate-400" />
+                                    <Lock className="h-6 w-6 text-yomu-text-secondary/50" />
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-start mb-1">
-                                    <h3 className="font-bold text-blue-950 truncate">{ach.name}</h3>
-                                    <span className="text-xs font-medium text-amber-600 shrink-0">+{ach.pointsReward} Pts</span>
+                                    <h3 className="font-bold text-yomu-foreground truncate">{ach.name}</h3>
+                                    <span className="text-xs font-medium text-yomu-accent-dark shrink-0">+{ach.pointsReward} Pts</span>
                                 </div>
-                                <p className="text-sm text-slate-600 mb-3">{ach.description}</p>
+                                <p className="text-sm text-yomu-text-secondary mb-3">{ach.description}</p>
                                 <div className="space-y-1">
-                                    <div className="flex justify-between text-xs text-slate-500 font-medium">
+                                    <div className="flex justify-between text-xs text-yomu-text-secondary font-medium">
                                         <span>{ach.progressCount} / {ach.targetCount}</span>
                                         <span>{Math.round((ach.progressCount / ach.targetCount) * 100)}%</span>
                                     </div>
