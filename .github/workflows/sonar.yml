@@ -21,6 +21,7 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
+      - run: npm run test:coverage
       - run: npm run build
 
       - name: SonarCloud Scan
@@ -33,5 +34,6 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.sources=.
-            -Dsonar.exclusions=**/.next/**,**/node_modules/**,**/out/**,**/dist/**
-            -Dsonar.coverage.exclusions=**/*.txt,**/*.css,src/app/**,src/modules/**
+            -Dsonar.exclusions=**/.next/**,**/node_modules/**,**/out/**,**/dist/**,**/coverage/**,**/*.test.*
+            -Dsonar.coverage.exclusions=**/*.txt,**/*.css,**/*.test.*,**/components/ui/**,**/next.config.ts,**/lib/utils.ts,**/.next/**,**/app/(protected)/**,**/app/api/auth/**
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
