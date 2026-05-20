@@ -1,64 +1,60 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/src/modules/auth";
+import { AuthCard } from "@/src/components/auth/AuthCard";
+import { GoogleAuthSection } from "@/src/components/auth/GoogleAuthSection";
 
 export default function LoginPage() {
-    const router = useRouter();
+  const { login, loading, error, clearError } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    clearError();
+    await login({ identifier: username, password });
+  };
 
-    async function handleSubmit(e: React.FormEvent) {
-        e.preventDefault();
-
-        const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ identifier: username, password }),
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-
-            const token = data.token ?? data.accessToken ?? data.jwt;
-
-            if (!token) {
-                alert("Login success but token not found in response");
-                return;
-            }
-
-            localStorage.setItem("token", token);
-            router.push("/dashboard");
-
-        } else {
-            alert("Login failed");
-        }
-    }
-
-    return (
-        <div style={{ padding: "40px" }}>
-            <h1>Login</h1>
-
-            <form onSubmit={handleSubmit} style={{ display: "grid", gap: "10px", width: "250px" }}>
-                <input
-                    placeholder="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-
-                <input
-                    type="password"
-                    placeholder="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-
-                <button type="submit">Login</button>
-            </form>
+  return (
+    <AuthCard
+      title="Login Yomu"
+      description="Masuk ke akun kamu"
+      error={error}
+      footerText="Belum punya akun?"
+      footerLinkText="Daftar di sini"
+      footerLinkHref="/auth/register"
+      extras={<GoogleAuthSection text="signin_with" />}
+    >
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="space-y-2">
+          <Label htmlFor="username">Username or Email</Label>
+          <Input
+            id="username"
+            placeholder="username or email"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </div>
-    );
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </Button>
+      </form>
+    </AuthCard>
+  );
 }
