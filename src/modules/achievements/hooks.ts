@@ -19,22 +19,27 @@ export function useUserAchievements() {
 
     useEffect(() => {
         if (!user?.id) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setLoading(false);
+            Promise.resolve().then(() => setLoading(false));
             return;
         }
 
-        setLoading(true);
-        Promise.all([
-            api.fetchUserProgress(user.id),
-            api.fetchUserDailyProgress(user.id)
-        ])
-            .then(([progData, dailyProgData]) => {
+        const userId = user.id;
+        const load = async () => {
+            setLoading(true);
+            try {
+                const [progData, dailyProgData] = await Promise.all([
+                    api.fetchUserProgress(userId),
+                    api.fetchUserDailyProgress(userId)
+                ]);
                 setProgress(progData);
                 setDailyProgress(dailyProgData);
-            })
-            .catch(setError)
-            .finally(() => setLoading(false));
+            } catch (err) {
+                setError(err instanceof Error ? err : new Error(String(err)));
+            } finally {
+                setLoading(false);
+            }
+        };
+        Promise.resolve().then(() => load());
     }, [user?.id]);
 
     return { progress, dailyProgress, loading, error };
@@ -48,8 +53,6 @@ export function useMasterAchievements() {
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLoading(true);
         Promise.all([
             api.fetchAllAchievements(),
             api.fetchAllDailyMissions()

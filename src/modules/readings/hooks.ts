@@ -26,18 +26,27 @@ export function useReadingDetails(id: string) {
     useEffect(() => {
         if (!id) return;
         
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLoading(true);
-        Promise.all([
-            api.fetchReadingById(id),
-            api.fetchReadingQuestions(id)
-        ])
-            .then(([readingData, questionsData]) => {
-                setReading(readingData);
-                setQuestions(questionsData);
-            })
-            .catch(setError)
-            .finally(() => setLoading(false));
+        let cancelled = false;
+        const load = async () => {
+            setLoading(true);
+            try {
+                const [readingData, questionsData] = await Promise.all([
+                    api.fetchReadingById(id),
+                    api.fetchReadingQuestions(id)
+                ]);
+                if (!cancelled) {
+                    setReading(readingData);
+                    setQuestions(questionsData);
+                }
+            } catch (err) {
+                if (!cancelled) setError(err instanceof Error ? err : new Error(String(err)));
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+        Promise.resolve().then(() => load());
+
+        return () => { cancelled = true; };
     }, [id]);
 
     return { reading, questions, loading, error };
@@ -99,8 +108,7 @@ export function useAdminReadings() {
     };
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        refresh();
+        Promise.resolve().then(() => refresh());
     }, []);
 
     return { readings, loading, error, refresh };

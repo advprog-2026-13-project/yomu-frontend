@@ -13,6 +13,8 @@ export default defineConfig({
       reporter: ["text", "lcov"],
       include: [
         "src/modules/auth/**/*.{ts,tsx}",
+        "src/modules/achievements/**/*.{ts,tsx}",
+        "src/modules/readings/**/*.{ts,tsx}",
         "src/app/auth/**/*.{ts,tsx}",
         "src/components/auth/**/*.{ts,tsx}",
       ],
