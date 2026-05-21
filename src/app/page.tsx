@@ -53,26 +53,16 @@ export default function Home() {
                             </Button>
                         </div>
                     </div>
-                    
+
                     {/* Hero Image */}
                     <div className="relative">
                         <div className="absolute inset-0 bg-gradient-to-tr from-yomu-primary/20 to-yomu-accent/20 rounded-[2rem] transform translate-x-4 translate-y-4"></div>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471&auto=format&fit=crop" 
-                            alt="Mahasiswa belajar bersama" 
+                        <img
+                            src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471&auto=format&fit=crop"
+                            alt="Mahasiswa belajar bersama"
                             className="relative z-10 w-full h-[500px] object-cover rounded-[2rem] shadow-2xl border border-white/20"
                         />
-                        {/* Floating elements */}
-                        <div className="absolute -left-4 md:-left-12 top-12 z-20 bg-yomu-surface p-4 rounded-xl shadow-lg border border-yomu-border flex items-center gap-3 animate-bounce" style={{animationDuration: '3s'}}>
-                            <div className="bg-yomu-success/20 p-2 rounded-full">
-                                <ShieldCheck className="h-6 w-6 text-yomu-success" />
-                            </div>
-                            <div>
-                                <p className="text-xs text-yomu-text-secondary">Akurasi Informasi</p>
-                                <p className="font-bold text-yomu-foreground">Terverifikasi</p>
-                            </div>
-                        </div>
                     </div>
                 </section>
 
@@ -96,7 +86,7 @@ export default function Home() {
                         <BookOpen className="h-6 w-6 text-white" />
                         <span className="font-serif text-xl font-bold text-white">Yomu</span>
                     </div>
-                    
+
                     <div className="text-center md:text-right">
                         <p className="text-sm">Hak Cipta &copy; {new Date().getFullYear()} Yomu Learning Platform.</p>
                         <p className="text-sm text-white/60 mt-2">
