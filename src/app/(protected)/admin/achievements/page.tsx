@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Trophy, Target, Plus, Edit, Trash2, RotateCcw, UserMinus, Loader2, Award, Star, X } from "lucide-react";
 import { useMasterAchievements, useAdminAchievementActions } from "@/src/modules/achievements/hooks";
 import { useAuth } from "@/src/modules/auth";
-import { clsx } from "clsx";
 import type { Achievement, DailyMission } from "@/src/modules/achievements/types";
 
 export default function AdminAchievementsPage() {
@@ -33,7 +32,7 @@ export default function AdminAchievementsPage() {
 
     // Modals & Panels State
     const [activeModal, setActiveModal] = useState<"create_ach" | "edit_ach" | "create_mission" | "edit_mission" | null>(null);
-    const [selectedItem, setSelectedItem] = useState<any>(null);
+    const [selectedItem, setSelectedItem] = useState<Achievement | DailyMission | null>(null);
 
     // Form Fields State
     const [name, setName] = useState("");

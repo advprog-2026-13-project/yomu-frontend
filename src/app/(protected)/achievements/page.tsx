@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Trophy, Target, Award, Star, ArrowRight, CheckCircle2, Calendar, Loader2, Sparkles } from "lucide-react";
+import { Trophy, Target, Award, Star, ArrowRight, Calendar, Loader2 } from "lucide-react";
 import { useMasterAchievements, useUserAchievements } from "@/src/modules/achievements/hooks";
 import { useAuth } from "@/src/modules/auth";
 import { clsx } from "clsx";
@@ -26,6 +25,7 @@ export default function AchievementsPage() {
     } = useUserAchievements();
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 

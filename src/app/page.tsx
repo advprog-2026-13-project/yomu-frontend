@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, ShieldCheck, Gamepad2 } from "lucide-react";
+import { ArrowRight, BookOpen, Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {

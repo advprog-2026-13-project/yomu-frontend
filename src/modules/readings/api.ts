@@ -91,8 +91,8 @@ export async function adminUnhideReading(id: string): Promise<void> {
 export async function adminAddQuestion(
     readingId: string,
     payload: { questionText: string; options: string[]; correctAnswer: string }
-): Promise<any> {
-    return request<any>(`/api/admin/readings/${readingId}/questions`, {
+): Promise<QuestionResponse> {
+    return request<QuestionResponse>(`/api/admin/readings/${readingId}/questions`, {
         method: "POST",
         body: JSON.stringify(payload),
     });
@@ -101,8 +101,8 @@ export async function adminAddQuestion(
 export async function adminUpdateQuestion(
     questionId: string,
     payload: { questionText: string; options: string[]; correctAnswer: string }
-): Promise<any> {
-    return request<any>(`/api/admin/questions/${questionId}`, {
+): Promise<QuestionResponse> {
+    return request<QuestionResponse>(`/api/admin/questions/${questionId}`, {
         method: "PUT",
         body: JSON.stringify(payload),
     });

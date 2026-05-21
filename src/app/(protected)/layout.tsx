@@ -121,7 +121,7 @@ interface ActiveToast {
 function AchievementNotifier() {
     const { user } = useAuth();
     const [toasts, setToasts] = useState<ActiveToast[]>([]);
-    const [masterAchievements, setMasterAchievements] = useState<Record<string, any>>({});
+    const [masterAchievements, setMasterAchievements] = useState<Record<string, { name: string; description: string }>>({});
     
     // Fetch master achievements to map UUID to Name
     useEffect(() => {
@@ -137,14 +137,14 @@ function AchievementNotifier() {
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data)) {
-                        const map: Record<string, any> = {};
+                        const map: Record<string, { name: string; description: string }> = {};
                         data.forEach(ach => {
                             map[ach.id] = ach;
                         });
                         setMasterAchievements(map);
                     }
                 }
-            } catch (e) {
+            } catch {
                 // ignore
             }
         };
@@ -206,7 +206,7 @@ function AchievementNotifier() {
                         });
                     }
                 }
-            } catch (e) {
+            } catch {
                 // ignore polling errors
             }
         };

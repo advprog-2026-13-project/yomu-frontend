@@ -22,6 +22,7 @@ export default function ReadingDetailPage({ params }: { params: Promise<{ readin
     const [actionError, setActionError] = useState<string | null>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 
@@ -51,7 +52,7 @@ export default function ReadingDetailPage({ params }: { params: Promise<{ readin
             } else {
                 setActionError("Gagal mengirim jawaban kuis. Anda mungkin sudah menyelesaikan kuis ini.");
             }
-        } catch (err) {
+        } catch {
             setActionError("Terjadi kesalahan saat mengumpulkan kuis.");
         }
     };

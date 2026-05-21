@@ -14,10 +14,12 @@ export default function ReadingsPage() {
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentPage(1);
     }, [searchQuery]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 

@@ -26,6 +26,7 @@ export function useReadingDetails(id: string) {
     useEffect(() => {
         if (!id) return;
         
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         Promise.all([
             api.fetchReadingById(id),
@@ -98,6 +99,7 @@ export function useAdminReadings() {
     };
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         refresh();
     }, []);
 

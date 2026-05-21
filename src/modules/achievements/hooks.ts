@@ -19,6 +19,7 @@ export function useUserAchievements() {
 
     useEffect(() => {
         if (!user?.id) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLoading(false);
             return;
         }
@@ -47,6 +48,7 @@ export function useMasterAchievements() {
     const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLoading(true);
         Promise.all([
             api.fetchAllAchievements(),

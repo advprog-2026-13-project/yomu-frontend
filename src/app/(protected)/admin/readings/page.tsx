@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Plus, Edit, Trash2, Eye, EyeOff, HelpCircle, Loader2, ArrowLeft, X } from "lucide-react";
-import { useAdminReadings, useAdminActions, useReadingDetails } from "@/src/modules/readings/hooks";
+import { BookOpen, Plus, Edit, Trash2, Eye, EyeOff, HelpCircle, Loader2, X } from "lucide-react";
+import { useAdminReadings, useAdminActions } from "@/src/modules/readings/hooks";
 import * as api from "@/src/modules/readings/api";
 import { useAuth } from "@/src/modules/auth";
 import type { Reading, QuestionResponse } from "@/src/modules/readings/types";
@@ -186,7 +186,7 @@ export default function AdminReadingsPage() {
         }
     };
 
-    const handleEditQuestionClick = (q: any) => {
+    const handleEditQuestionClick = (q: QuestionResponse) => {
         setEditingQuestionId(q.questionId);
         setQuestionText(q.questionText);
         setOptions([...q.options]);
