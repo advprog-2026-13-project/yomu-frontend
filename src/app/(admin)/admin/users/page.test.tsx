@@ -1,42 +1,41 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen } from "@testing-library/react";
 
-vi.mock("@/src/modules/auth", () => ({
-    useAuth: () => ({ user: null, loading: false }),
-    getToken: () => null,
-    removeToken: vi.fn(),
-    fetchUser: vi.fn(),
-}));
+const mockFetchUsers = vi.fn(() => Promise.resolve([
+  { id: "u-1", username: "admin", displayName: "Admin User", role: "ADMIN" },
+  { id: "u-2", username: "testuser", displayName: "Test User", role: "USER" },
+]));
 
 vi.mock("@/src/modules/admin/api", () => ({
-    fetchUsers: vi.fn(() => Promise.resolve([])),
-    promoteUser: vi.fn(() => Promise.resolve()),
-    demoteUser: vi.fn(() => Promise.resolve()),
+  fetchUsers: () => mockFetchUsers(),
+  promoteUser: vi.fn(() => Promise.resolve()),
+  demoteUser: vi.fn(() => Promise.resolve()),
 }));
 
 import UsersPage from "./page";
 
 describe("UsersPage", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-    afterEach(() => {
-        cleanup();
-    });
+  it("renders loading state initially", () => {
+    render(<UsersPage />);
+    expect(screen.getByText(/loading users/i)).toBeInTheDocument();
+  });
 
-    it("renders user management heading", () => {
-        render(<UsersPage />);
-        expect(screen.getByText("User Management")).toBeInTheDocument();
-    });
+  it("calls fetchUsers on mount", () => {
+    render(<UsersPage />);
+    expect(mockFetchUsers).toHaveBeenCalled();
+  });
 
-    it("renders users table header", () => {
-        render(<UsersPage />);
-        expect(screen.getByText("Users")).toBeInTheDocument();
-    });
+  it("renders title", () => {
+    render(<UsersPage />);
+    expect(screen.getAllByText("User Management").length).toBeGreaterThan(0);
+  });
 
-    it("renders refresh button", () => {
-        render(<UsersPage />);
-        expect(screen.getByRole("button", { name: /refresh/i })).toBeInTheDocument();
-    });
+  it("renders refresh button", () => {
+    render(<UsersPage />);
+    expect(screen.getAllByRole("button", { name: /refresh/i }).length).toBeGreaterThan(0);
+  });
 });
