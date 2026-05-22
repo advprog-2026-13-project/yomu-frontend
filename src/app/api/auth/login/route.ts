@@ -10,16 +10,6 @@ export async function POST(req: Request) {
         body: JSON.stringify(body),
     });
 
-    const text = await res.text();
-    console.log("LOGIN -> backend status:", res.status);
-    console.log("LOGIN -> backend body:", text);
-
-    let data: Record<string, unknown> = {};
-    try {
-        data = JSON.parse(text);
-    } catch {
-        data = { raw: text };
-    }
-    // hi
+    const data = await res.json().catch(() => ({}));
     return NextResponse.json(data, { status: res.status });
 }

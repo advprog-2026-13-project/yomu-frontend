@@ -110,8 +110,7 @@ export function useAuth() {
 
     useEffect(() => {
         if (authApi.getToken() && !user) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            fetchUser();
+            Promise.resolve().then(() => fetchUser());
         }
     }, [user, fetchUser]);
 
