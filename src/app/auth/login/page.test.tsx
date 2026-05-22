@@ -43,17 +43,17 @@ describe("LoginPage", () => {
   it("renders login form", () => {
     render(<LoginPage />);
 
-    expect(screen.getByText("Login Yomu")).toBeInTheDocument();
-    expect(screen.getByText("Masuk ke akun kamu")).toBeInTheDocument();
-    expect(screen.getByLabelText("Username or Email")).toBeInTheDocument();
+    expect(screen.getByText("Yomu")).toBeInTheDocument();
+    expect(screen.getByText("Baca lebih dalam. Pahami lebih baik.")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email atau Username")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Masuk" })).toBeInTheDocument();
   });
 
   it("renders registration link", () => {
     render(<LoginPage />);
 
-    const link = screen.getByText("Daftar di sini");
+    const link = screen.getByText("Daftar sekarang");
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/auth/register");
   });
@@ -69,9 +69,9 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
     render(<LoginPage />);
 
-    await user.type(screen.getByLabelText("Username or Email"), "testuser");
+    await user.type(screen.getByLabelText("Email atau Username"), "testuser");
     await user.type(screen.getByLabelText("Password"), "password");
-    await user.click(screen.getByRole("button", { name: "Login" }));
+    await user.click(screen.getByRole("button", { name: "Masuk" }));
 
     expect(mockClearError).toHaveBeenCalled();
     expect(mockLogin).toHaveBeenCalledWith({ identifier: "testuser", password: "password" });
@@ -81,7 +81,7 @@ describe("LoginPage", () => {
     mockAuthState.loading = true;
     render(<LoginPage />);
 
-    expect(screen.getByRole("button", { name: "Logging in..." })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Masuk..." })).toBeInTheDocument();
   });
 
   it("displays error alert when error is set", () => {
@@ -94,7 +94,7 @@ describe("LoginPage", () => {
   it("requires username and password fields", () => {
     render(<LoginPage />);
 
-    expect(screen.getByLabelText("Username or Email")).toBeRequired();
+    expect(screen.getByLabelText("Email atau Username")).toBeRequired();
     expect(screen.getByLabelText("Password")).toBeRequired();
   });
 });
