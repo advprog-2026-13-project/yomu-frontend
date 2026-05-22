@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getToken } from "@/src/modules/auth/api";
-import { useAuth } from "@/src/modules/auth";
+import { useAuth, type User as AuthUser } from "@/src/modules/auth";
 import Link from "next/link";
 import { BookOpen, Trophy, Target, MessageSquare, LayoutDashboard, User, LogOut, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -106,7 +106,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
             <main className="flex-grow">
                 {children}
             </main>
-            <AchievementNotifier />
+            <AchievementNotifier user={user} />
         </div>
     );
 }
@@ -116,26 +116,29 @@ interface ActiveToast {
     title: string;
     description: string;
     name?: string;
+    type: "achievement" | "mission";
 }
 
-function AchievementNotifier() {
-    const { user } = useAuth();
+function AchievementNotifier({ user }: { user: AuthUser | null }) {
     const [toasts, setToasts] = useState<ActiveToast[]>([]);
     const [masterAchievements, setMasterAchievements] = useState<Record<string, { name: string; description: string }>>({});
+    const [masterMissions, setMasterMissions] = useState<Record<string, { name: string; description: string }>>({});
     
-    // Fetch master achievements to map UUID to Name
+    // Fetch master achievements and daily missions to map UUID to Name
     useEffect(() => {
         if (!user?.id) return;
 
-        const fetchMaster = async () => {
+        const fetchMasters = async () => {
             try {
                 const token = getToken();
                 if (!token) return;
-                const res = await fetch("/api/achievements", {
+                
+                // Fetch achievements
+                const resAch = await fetch("/api/achievements", {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
-                if (res.ok) {
-                    const data = await res.json();
+                if (resAch.ok) {
+                    const data = await resAch.json();
                     if (Array.isArray(data)) {
                         const map: Record<string, { name: string; description: string }> = {};
                         data.forEach(ach => {
@@ -144,22 +147,38 @@ function AchievementNotifier() {
                         setMasterAchievements(map);
                     }
                 }
+
+                // Fetch daily missions
+                const resMissions = await fetch("/api/achievements/daily-missions", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (resMissions.ok) {
+                    const data = await resMissions.json();
+                    if (Array.isArray(data)) {
+                        const map: Record<string, { name: string; description: string }> = {};
+                        data.forEach(m => {
+                            map[m.id] = m;
+                        });
+                        setMasterMissions(map);
+                    }
+                }
             } catch {
                 // ignore
             }
         };
-        fetchMaster();
+        fetchMasters();
     }, [user?.id]);
     
     // Polling effect in the background
     useEffect(() => {
         if (!user?.id) return;
         
-        const checkForAchievements = async () => {
+        const checkForAchievementsAndMissions = async () => {
             try {
                 const token = getToken();
                 if (!token) return;
                 
+                // 1. Check achievements
                 const res = await fetch(`/api/achievements/users/${user.id}/completed`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
@@ -167,43 +186,82 @@ function AchievementNotifier() {
                 if (res.ok) {
                     const completed = await res.json();
                     if (Array.isArray(completed)) {
-                        const notified = JSON.parse(localStorage.getItem("notified_achievements") || "[]");
+                        const notifiedStr = localStorage.getItem("notified_achievements");
+                        const notified = notifiedStr ? JSON.parse(notifiedStr) : null;
                         
-                        completed.forEach(ach => {
-                            if (!notified.includes(ach.achievementId)) {
-                                // Found a new achievement!
-                                const achInfo = masterAchievements[ach.achievementId];
-                                const achName = achInfo?.name || "Pencapaian Baru!";
-                                const achDesc = achInfo?.description || "Selamat! Anda telah membuka pencapaian baru.";
-                                
-                                // Show Toast instead of Alert for STUDENTS
-                                if (user.role === "STUDENT") {
+                        if (notified === null) {
+                            // First run: silently initialize notified achievements list with already completed ones
+                            const initialNotified = completed.map(ach => ach.achievementId);
+                            localStorage.setItem("notified_achievements", JSON.stringify(initialNotified));
+                        } else {
+                            completed.forEach(ach => {
+                                if (!notified.includes(ach.achievementId)) {
+                                    // Found a new achievement!
+                                    const achInfo = masterAchievements[ach.achievementId];
+                                    const achName = achInfo?.name || "Pencapaian Baru!";
+                                    const achDesc = achInfo?.description || "Selamat! Anda telah membuka pencapaian baru.";
+                                    
                                     setToasts(prev => [
                                         ...prev, 
                                         { 
                                             id: ach.achievementId, 
                                             title: "🏆 Pencapaian Terbuka!", 
                                             description: achDesc,
-                                            name: achName
+                                            name: achName,
+                                            type: "achievement"
                                         }
                                     ]);
-                                } else {
-                                    // For admins or other roles, you can show toast as well
-                                    setToasts(prev => [
-                                        ...prev, 
-                                        { 
-                                            id: ach.achievementId, 
-                                            title: "🏆 Pencapaian Terbuka!", 
-                                            description: achDesc,
-                                            name: achName
-                                        }
-                                    ]);
+                                    
+                                    notified.push(ach.achievementId);
+                                    localStorage.setItem("notified_achievements", JSON.stringify(notified));
                                 }
-                                
-                                notified.push(ach.achievementId);
-                                localStorage.setItem("notified_achievements", JSON.stringify(notified));
-                            }
-                        });
+                            });
+                        }
+                    }
+                }
+
+                // 2. Check daily missions progress
+                const resDaily = await fetch(`/api/achievements/users/${user.id}/daily-progress`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+
+                if (resDaily.ok) {
+                    const dailyProgress = await resDaily.json();
+                    if (Array.isArray(dailyProgress)) {
+                        const notifiedMissionsStr = localStorage.getItem("notified_daily_missions");
+                        const notifiedMissions = notifiedMissionsStr ? JSON.parse(notifiedMissionsStr) : null;
+
+                        if (notifiedMissions === null) {
+                            // First run: silently initialize notified daily missions list with already completed ones
+                            const initialNotifiedMissions = dailyProgress
+                                .filter(prog => prog.completed ?? prog.isCompleted ?? false)
+                                .map(prog => prog.missionId);
+                            localStorage.setItem("notified_daily_missions", JSON.stringify(initialNotifiedMissions));
+                        } else {
+                            dailyProgress.forEach(prog => {
+                                const isCompleted = prog.completed ?? prog.isCompleted ?? false;
+                                if (isCompleted && !notifiedMissions.includes(prog.missionId)) {
+                                    // Found a new completed daily mission!
+                                    const missionInfo = masterMissions[prog.missionId];
+                                    const missionName = missionInfo?.name || "Misi Harian Selesai!";
+                                    const missionDesc = missionInfo?.description || "Selamat! Anda telah menyelesaikan misi harian.";
+
+                                    setToasts(prev => [
+                                        ...prev,
+                                        {
+                                            id: prog.missionId,
+                                            title: "🎯 Misi Harian Selesai!",
+                                            description: missionDesc,
+                                            name: missionName,
+                                            type: "mission"
+                                        }
+                                    ]);
+
+                                    notifiedMissions.push(prog.missionId);
+                                    localStorage.setItem("notified_daily_missions", JSON.stringify(notifiedMissions));
+                                }
+                            });
+                        }
                     }
                 }
             } catch {
@@ -212,10 +270,10 @@ function AchievementNotifier() {
         };
         
         // Check immediately, then every 5 seconds
-        checkForAchievements();
-        const interval = setInterval(checkForAchievements, 5000);
+        checkForAchievementsAndMissions();
+        const interval = setInterval(checkForAchievementsAndMissions, 5000);
         return () => clearInterval(interval);
-    }, [user?.id, user?.role, masterAchievements]);
+    }, [user?.id, masterAchievements, masterMissions]);
     
     const removeToast = (id: string) => {
         setToasts(prev => prev.filter(t => t.id !== id));
@@ -242,23 +300,39 @@ function AchievementToast({ toast, onClose }: { toast: ActiveToast; onClose: () 
         return () => clearTimeout(timer);
     }, [onClose]);
 
+    const isMission = toast.type === "mission";
+
     return (
-        <div className="pointer-events-auto bg-yomu-surface border border-yomu-primary/20 shadow-2xl rounded-2xl p-4 flex gap-3 relative overflow-hidden transition-all duration-300 animate-slide-in-right">
-            {/* Golden glow gradient background effect */}
-            <div className="absolute top-0 right-0 w-24 h-24 bg-yomu-primary/5 rounded-full blur-xl pointer-events-none" />
+        <div className={`pointer-events-auto bg-yomu-surface border shadow-2xl rounded-2xl p-4 flex gap-3 relative overflow-hidden transition-all duration-300 animate-slide-in-right ${
+            isMission ? "border-yomu-accent/20" : "border-yomu-primary/20"
+        }`}>
+            {/* Custom glow gradient background effect */}
+            <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-xl pointer-events-none ${
+                isMission ? "bg-yomu-accent/5" : "bg-yomu-primary/5"
+            }`} />
             
-            {/* Golden Trophy Icon */}
-            <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yomu-primary to-yomu-primary-dark rounded-xl flex items-center justify-center text-white shadow-md shadow-yomu-primary/20">
-                <Trophy className="h-6 w-6 animate-pulse" />
+            {/* Custom Icon based on type */}
+            <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md ${
+                isMission 
+                ? "bg-gradient-to-br from-yomu-accent to-yomu-accent-dark shadow-yomu-accent/20" 
+                : "bg-gradient-to-br from-yomu-primary to-yomu-primary-dark shadow-yomu-primary/20"
+            }`}>
+                {isMission ? (
+                    <Target className="h-6 w-6 animate-pulse" />
+                ) : (
+                    <Trophy className="h-6 w-6 animate-pulse" />
+                )}
             </div>
             
             {/* Content */}
             <div className="flex-grow space-y-1 pr-6">
                 <div className="flex items-center gap-1">
-                    <span className="text-[10px] font-extrabold text-yomu-primary uppercase tracking-wider">
+                    <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
+                        isMission ? "text-yomu-accent" : "text-yomu-primary"
+                    }`}>
                         {toast.title}
                     </span>
-                    <Sparkles className="h-3 w-3 text-yomu-primary" />
+                    <Sparkles className={`h-3 w-3 ${isMission ? "text-yomu-accent" : "text-yomu-primary"}`} />
                 </div>
                 <h4 className="text-sm font-bold text-yomu-foreground font-heading leading-snug">
                     {toast.name}
@@ -278,7 +352,11 @@ function AchievementToast({ toast, onClose }: { toast: ActiveToast; onClose: () 
             
             {/* Animated Progress Bar Timer */}
             <div 
-                className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-yomu-primary to-yomu-accent animate-shrink-width w-full" 
+                className={`absolute bottom-0 left-0 h-1 animate-shrink-width w-full ${
+                    isMission 
+                    ? "bg-gradient-to-r from-yomu-accent to-indigo-500" 
+                    : "bg-gradient-to-r from-yomu-primary to-yomu-accent"
+                }`} 
                 style={{ animationDuration: "8s", animationTimingFunction: "linear" }} 
             />
         </div>
