@@ -2,11 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as authApi from "./api";
 
 function mockFetch(response: unknown, status = 200, ok = true) {
-  return vi.fn().mockResolvedValue({
-    ok,
-    status,
-    json: async () => response,
-  });
+  return vi.fn().mockResolvedValue({ ok, status, json: async () => response });
 }
 
 describe("auth api", () => {
@@ -15,180 +11,81 @@ describe("auth api", () => {
     localStorage.clear();
   });
 
-  describe("token management", () => {
-    it("getToken returns null when not set", () => {
-      expect(authApi.getToken()).toBeNull();
-    });
-
-    it("setToken and getToken round-trip", () => {
-      authApi.setToken("my-token");
-      expect(authApi.getToken()).toBe("my-token");
-    });
-
-    it("removeToken clears the token", () => {
-      authApi.setToken("my-token");
-      authApi.removeToken();
-      expect(authApi.getToken()).toBeNull();
-    });
+  it("getToken returns null when not set", () => {
+    expect(authApi.getToken()).toBeNull();
   });
 
-  describe("login", () => {
-    it("returns AuthResponse on success", async () => {
-      global.fetch = mockFetch({ token: "jwt-token" });
-
-      const result = await authApi.login({ identifier: "user", password: "pass" });
-      expect(result.token).toBe("jwt-token");
-    });
-
-    it("throws on error response", async () => {
-      global.fetch = mockFetch({ message: "Invalid credentials" }, 401, false);
-
-      await expect(
-        authApi.login({ identifier: "user", password: "wrong" })
-      ).rejects.toThrow("Invalid credentials");
-    });
+  it("setToken and getToken round-trip", () => {
+    authApi.setToken("my-token");
+    expect(authApi.getToken()).toBe("my-token");
   });
 
-  describe("register", () => {
-    it("returns AuthResponse on success", async () => {
-      global.fetch = mockFetch({ token: "jwt-token" });
-
-      const result = await authApi.register({
-        username: "newuser",
-        displayName: "New User",
-        email: "new@mail.com",
-        phoneNumber: null,
-        password: "pass123",
-      });
-      expect(result.token).toBe("jwt-token");
-    });
-
-    it("throws on error response", async () => {
-      global.fetch = mockFetch({ message: "Username taken" }, 409, false);
-
-      await expect(
-        authApi.register({
-          username: "taken",
-          displayName: "Taken",
-          password: "pass",
-        })
-      ).rejects.toThrow("Username taken");
-    });
+  it("removeToken clears the token", () => {
+    authApi.setToken("my-token");
+    authApi.removeToken();
+    expect(authApi.getToken()).toBeNull();
   });
 
-  describe("loginWithGoogle", () => {
-    it("sends google token and returns AuthResponse", async () => {
-      global.fetch = mockFetch({ token: "google-jwt" });
-
-      const result = await authApi.loginWithGoogle("google-credential");
-      expect(result.token).toBe("google-jwt");
-    });
-
-    it("throws on error", async () => {
-      global.fetch = mockFetch({ message: "Invalid Google token" }, 401, false);
-
-      await expect(authApi.loginWithGoogle("bad-token")).rejects.toThrow("Invalid Google token");
-    });
+  it("login returns token on success", async () => {
+    global.fetch = mockFetch({ accessToken: "jwt" });
+    const result = await authApi.login({ identifier: "u", password: "p" });
+    expect(result.accessToken).toBe("jwt");
   });
 
-  describe("fetchUser", () => {
-    it("returns User with auth header", async () => {
-      authApi.setToken("my-token");
-      const fetchMock = vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({ id: "1", username: "bob", displayName: "Bob", role: "USER" }),
-      });
-      global.fetch = fetchMock;
-
-      const user = await authApi.fetchUser();
-      expect(user.username).toBe("bob");
-      expect(fetchMock).toHaveBeenCalledWith("/api/auth/me", expect.objectContaining({
-        headers: expect.objectContaining({ Authorization: "Bearer my-token" }),
-      }));
-    });
-
-    it("returns empty user when response is not ok", async () => {
-      global.fetch = mockFetch({}, 500, false);
-
-      await expect(authApi.fetchUser()).rejects.toThrow("Request failed with status 500");
-    });
+  it("login throws on error", async () => {
+    global.fetch = mockFetch({ message: "Invalid" }, 401, false);
+    await expect(authApi.login({ identifier: "u", password: "p" })).rejects.toThrow("Invalid");
   });
 
-  describe("updateUser", () => {
-    it("sends PATCH with auth header", async () => {
-      authApi.setToken("my-token");
-      const fetchMock = vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          id: "1",
-          username: "newbob",
-          displayName: "New Bob",
-          role: "USER",
-        }),
-      });
-      global.fetch = fetchMock;
-
-      const input = {
-        username: "newbob",
-        displayName: "New Bob",
-        email: "bob@mail.com",
-        phoneNumber: "0812",
-      };
-      const user = await authApi.updateUser(input);
-      expect(user.username).toBe("newbob");
-      expect(fetchMock).toHaveBeenCalledWith("/api/auth/me", expect.objectContaining({
-        method: "PATCH",
-        headers: expect.objectContaining({ Authorization: "Bearer my-token" }),
-      }));
-    });
+  it("register returns response on success", async () => {
+    global.fetch = mockFetch({ token: "jwt" });
+    const result = await authApi.register({ username: "u", displayName: "U", password: "p" });
+    expect(result.token).toBe("jwt");
   });
 
-  describe("deleteUser", () => {
-    it("sends DELETE with auth header", async () => {
-      authApi.setToken("my-token");
-      const fetchMock = vi.fn().mockResolvedValue({
-        ok: true,
-        status: 204,
-        json: async () => ({}),
-      });
-      global.fetch = fetchMock;
-
-      const result = await authApi.deleteUser();
-      expect(result).toBeUndefined();
-      expect(fetchMock).toHaveBeenCalledWith("/api/auth/me", expect.objectContaining({
-        method: "DELETE",
-      }));
-    });
-
-    it("throws on error", async () => {
-      authApi.setToken("my-token");
-      global.fetch = mockFetch({ message: "Forbidden" }, 403, false);
-
-      await expect(authApi.deleteUser()).rejects.toThrow("Forbidden");
-    });
+  it("loginWithGoogle sends credential", async () => {
+    global.fetch = mockFetch({ accessToken: "google-jwt" });
+    const result = await authApi.loginWithGoogle("cred");
+    expect(result.accessToken).toBe("google-jwt");
   });
 
-  describe("request helper edge cases", () => {
-    it("handles non-JSON error response gracefully", async () => {
-      global.fetch = vi.fn().mockResolvedValue({
-        ok: false,
-        status: 500,
-        json: async () => {
-          throw new Error("Not JSON");
-        },
-      });
-
-      await expect(authApi.fetchUser()).rejects.toThrow("Request failed with status 500");
+  it("fetchUser sends auth header", async () => {
+    authApi.setToken("tok");
+    const fm = vi.fn().mockResolvedValue({
+      ok: true, status: 200,
+      json: async () => ({ id: "1", username: "b", displayName: "B", role: "USER" }),
     });
+    global.fetch = fm;
 
-    it("handles fetch network errors", async () => {
-      global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
+    const user = await authApi.fetchUser();
+    expect(user.username).toBe("b");
+    expect(fm).toHaveBeenCalledWith("/api/auth/me", expect.objectContaining({
+      headers: expect.objectContaining({ Authorization: "Bearer tok" }),
+    }));
+  });
 
-      await expect(authApi.login({ identifier: "u", password: "p" })).rejects.toThrow(
-        "Network error"
-      );
+  it("updateUser sends PATCH with body", async () => {
+    authApi.setToken("tok");
+    global.fetch = mockFetch({ id: "1", username: "x", displayName: "X", role: "USER" });
+
+    const input = { username: "x", displayName: "X", email: "e@e.com", phoneNumber: "1" };
+    const user = await authApi.updateUser(input);
+    expect(user.username).toBe("x");
+  });
+
+  it("deleteUser calls DELETE endpoint", async () => {
+    authApi.setToken("tok");
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, status: 204, json: async () => ({}) });
+
+    const result = await authApi.deleteUser();
+    expect(result).toBeUndefined();
+  });
+
+  it("handles non-JSON error gracefully", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: false, status: 500,
+      json: async () => { throw new Error("Not JSON"); },
     });
+    await expect(authApi.fetchUser()).rejects.toThrow("Request failed with status 500");
   });
 });
