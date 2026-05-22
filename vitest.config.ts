@@ -12,11 +12,12 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       include: [
-        "src/modules/auth/**/*.ts",
-        "src/modules/auth/**/*.tsx",
-        "src/app/auth/**/*.tsx",
-        "src/components/auth/**/*.tsx",
-        "src/app/components/auth/**/*.tsx",
+        "src/modules/auth/**/*.{ts,tsx}",
+        "src/modules/achievements/**/*.{ts,tsx}",
+        "src/modules/readings/**/*.{ts,tsx}",
+        "src/app/auth/**/*.{ts,tsx}",
+        "src/components/auth/**/*.{ts,tsx}",
+        "src/app/components/auth/**/*.{ts,tsx}",
       ],
       exclude: [
         "src/**/*.test.ts",

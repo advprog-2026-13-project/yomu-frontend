@@ -45,6 +45,7 @@ export default function ForumThreadPage() {
     }, [readingId]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         loadComments();
     }, [loadComments]);
 
@@ -88,7 +89,7 @@ export default function ForumThreadPage() {
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 mb-1">
                             <Link
                                 href="/forum"
                                 className="text-xs text-yomu-text-secondary hover:text-yomu-primary transition-colors"

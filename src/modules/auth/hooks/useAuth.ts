@@ -110,8 +110,7 @@ export function useAuth() {
 
     useEffect(() => {
         if (authApi.getToken() && !user) {
-             
-            fetchUser();
+            Promise.resolve().then(() => fetchUser());
         }
     }, [user, fetchUser]);
 
