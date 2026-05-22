@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, cleanup, waitFor } from "@testing-library/react";
+import { render, cleanup } from "@testing-library/react";
 
 vi.mock("@/src/modules/admin/api", () => ({
   deleteForumComment: vi.fn(),
