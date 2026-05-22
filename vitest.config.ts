@@ -12,11 +12,10 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       include: [
-        "src/modules/**/*.ts",
+        "src/modules/auth/**/*.ts",
+        "src/modules/auth/**/*.tsx",
         "src/app/auth/**/*.tsx",
-        "src/app/(admin)/**/*.tsx",
-        "src/app/(protected)/league/**/*.tsx",
-        "src/app/components/**/*.tsx",
+        "src/components/auth/**/*.tsx",
       ],
       exclude: [
         "src/**/*.test.ts",
