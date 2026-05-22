@@ -32,7 +32,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { href: "/readings", label: "Katalog", icon: BookOpen },
         { href: "/achievements", label: "Pencapaian", icon: Target },
-        { href: "/league", label: "League", icon: Trophy },
+        { href: "/social", label: "Social", icon: Trophy },
         { href: "/forum", label: "Forum", icon: MessageSquare },
     ];
 
