@@ -8,6 +8,23 @@ import * as api from "@/src/modules/readings/api";
 import { useAuth } from "@/src/modules/auth";
 import type { Reading, QuestionResponse } from "@/src/modules/readings/types";
 
+// Helper to safely strip HTML tags without regex backtracking (ReDoS) vulnerability
+const stripHtml = (html: string): string => {
+    let result = "";
+    let inTag = false;
+    for (let i = 0; i < html.length; i++) {
+        const char = html[i];
+        if (char === "<") {
+            inTag = true;
+        } else if (char === ">") {
+            inTag = false;
+        } else if (!inTag) {
+            result += char;
+        }
+    }
+    return result;
+};
+
 export default function AdminReadingsPage() {
     const router = useRouter();
     const { user } = useAuth();
@@ -264,7 +281,7 @@ export default function AdminReadingsPage() {
 
                             <div 
                                 className="text-sm text-yomu-text-secondary line-clamp-3 mb-6 prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: reading.content.replace(/<[^>]*>/g, '').substring(0, 150) + "..." }}
+                                dangerouslySetInnerHTML={{ __html: stripHtml(reading.content).substring(0, 150) + "..." }}
                             />
 
                             <div className="mt-auto pt-4 border-t border-yomu-border flex flex-wrap gap-2">

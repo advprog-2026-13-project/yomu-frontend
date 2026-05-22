@@ -18,6 +18,14 @@ export default defineConfig({
         "src/app/auth/**/*.{ts,tsx}",
         "src/components/auth/**/*.{ts,tsx}",
       ],
+      exclude: [
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
+        "src/**/*.d.ts",
+        "src/**/index.ts",
+        "src/**/types.ts",
+        "src/**/constants.ts",
+      ],
     },
   },
   resolve: {

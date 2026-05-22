@@ -6,6 +6,23 @@ import { BookOpen, Search, Sparkles, CheckCircle2, ArrowRight, ChevronLeft, Chev
 import { useReadings } from "@/src/modules/readings/hooks";
 import { useAuth } from "@/src/modules/auth";
 
+// Helper to safely strip HTML tags without regex backtracking (ReDoS) vulnerability
+const stripHtml = (html: string): string => {
+    let result = "";
+    let inTag = false;
+    for (let i = 0; i < html.length; i++) {
+        const char = html[i];
+        if (char === "<") {
+            inTag = true;
+        } else if (char === ">") {
+            inTag = false;
+        } else if (!inTag) {
+            result += char;
+        }
+    }
+    return result;
+};
+
 export default function ReadingsPage() {
     const [mounted, setMounted] = useState(false);
     const { user } = useAuth();
@@ -149,7 +166,7 @@ export default function ReadingsPage() {
                                     
                                     <div 
                                         className="text-xs text-yomu-text-secondary/90 line-clamp-3 mb-6 prose prose-xs leading-relaxed"
-                                        dangerouslySetInnerHTML={{ __html: reading.content.replace(/<[^>]*>/g, '').substring(0, 120) + "..." }}
+                                        dangerouslySetInnerHTML={{ __html: stripHtml(reading.content).substring(0, 120) + "..." }}
                                     />
                                     
                                     <div className="mt-auto pt-4 border-t border-yomu-border flex items-center justify-between text-xs font-semibold">

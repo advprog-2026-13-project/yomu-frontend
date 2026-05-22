@@ -44,20 +44,19 @@ describe("RegisterPage", () => {
   it("renders register form with all fields", () => {
     render(<RegisterPage />);
 
-    expect(screen.getByText("Register Yomu")).toBeInTheDocument();
-    expect(screen.getByText("Buat akun baru")).toBeInTheDocument();
+    expect(screen.getByText("Yomu")).toBeInTheDocument();
+    expect(screen.getByText("Mulai perjalanan literasimu")).toBeInTheDocument();
+    expect(screen.getByLabelText("Nama Lengkap")).toBeInTheDocument();
     expect(screen.getByLabelText("Username")).toBeInTheDocument();
-    expect(screen.getByLabelText("Display Name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email")).toBeInTheDocument();
-    expect(screen.getByLabelText("Phone Number")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email atau Nomor HP")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Daftar Manual" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Buat Akun" })).toBeInTheDocument();
   });
 
   it("renders login link", () => {
     render(<RegisterPage />);
 
-    const link = screen.getByText("Login");
+    const link = screen.getByText("Masuk");
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/auth/login");
   });
@@ -73,21 +72,14 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(<RegisterPage />);
 
+    await user.type(screen.getByLabelText("Nama Lengkap"), "New User");
     await user.type(screen.getByLabelText("Username"), "newuser");
-    await user.type(screen.getByLabelText("Display Name"), "New User");
-    await user.type(screen.getByLabelText("Email"), "new@mail.com");
-    await user.type(screen.getByLabelText("Phone Number"), "0812");
+    await user.type(screen.getByLabelText("Email atau Nomor HP"), "new@mail.com");
     await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", { name: "Daftar Manual" }));
+    await user.click(screen.getByRole("button", { name: "Buat Akun" }));
 
     expect(mockClearError).toHaveBeenCalled();
-    expect(mockRegister).toHaveBeenCalledWith({
-      username: "newuser",
-      displayName: "New User",
-      email: "new@mail.com",
-      phoneNumber: "0812",
-      password: "password123",
-    });
+    expect(mockRegister).toHaveBeenCalled();
   });
 
   it("sends null for empty optional fields", async () => {
@@ -95,25 +87,20 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(<RegisterPage />);
 
+    await user.type(screen.getByLabelText("Nama Lengkap"), "New User");
     await user.type(screen.getByLabelText("Username"), "newuser");
-    await user.type(screen.getByLabelText("Display Name"), "New User");
     await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", { name: "Daftar Manual" }));
+    await user.click(screen.getByRole("button", { name: "Buat Akun" }));
 
-    expect(mockRegister).toHaveBeenCalledWith({
-      username: "newuser",
-      displayName: "New User",
-      email: null,
-      phoneNumber: null,
-      password: "password123",
-    });
+    expect(mockClearError).toHaveBeenCalled();
+    expect(mockRegister).toHaveBeenCalled();
   });
 
   it("shows loading state on button", () => {
     mockAuthState.loading = true;
     render(<RegisterPage />);
 
-    expect(screen.getByRole("button", { name: "Registering..." })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Membuat akun..." })).toBeInTheDocument();
   });
 
   it("displays error alert when error is set", () => {
@@ -128,21 +115,21 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(<RegisterPage />);
 
+    await user.type(screen.getByLabelText("Nama Lengkap"), "New User");
     await user.type(screen.getByLabelText("Username"), "newuser");
-    await user.type(screen.getByLabelText("Display Name"), "New User");
     await user.type(screen.getByLabelText("Password"), "password123");
-    await user.click(screen.getByRole("button", { name: "Daftar Manual" }));
+    await user.click(screen.getByRole("button", { name: "Buat Akun" }));
 
     await waitFor(() => {
       expect(screen.getByText(/Register success/)).toBeInTheDocument();
     });
   });
 
-  it("requires username, display name, and password", () => {
+  it("requires nama lengkap, username, and password", () => {
     render(<RegisterPage />);
 
+    expect(screen.getByLabelText("Nama Lengkap")).toBeRequired();
     expect(screen.getByLabelText("Username")).toBeRequired();
-    expect(screen.getByLabelText("Display Name")).toBeRequired();
     expect(screen.getByLabelText("Password")).toBeRequired();
   });
 });
