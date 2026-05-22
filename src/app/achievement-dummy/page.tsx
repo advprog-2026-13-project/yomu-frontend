@@ -30,7 +30,7 @@ export default function AchievementsDummyPage() {
     }
 
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+         
         loadTotal();
     }, []);
 
