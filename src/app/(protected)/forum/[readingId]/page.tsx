@@ -15,6 +15,7 @@ import { fetchComments, postComment } from "@/src/modules/forum/api";
 import { fetchReadings } from "@/src/modules/admin/api";
 import { useAuth } from "@/src/modules/auth";
 import { Avatar, CommentCard, CommentInput } from "@/src/modules/forum/components";
+import { countComments } from "@/src/modules/forum/utils";
 import type { CommentView } from "@/src/modules/forum/types";
 import type { Reading } from "@/src/modules/admin/types";
 // ─── Main Page ───────────────────────────────────────────────────────────────
@@ -30,6 +31,7 @@ export default function ForumThreadPage() {
     const [loadingComments, setLoadingComments] = useState(true);
     const [postingComment, setPostingComment] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [refreshToken, setRefreshToken] = useState(0);
 
     const loadComments = useCallback(async () => {
         setLoadingComments(true);
@@ -37,6 +39,7 @@ export default function ForumThreadPage() {
         try {
             const data = await fetchComments(readingId);
             setComments(data);
+            setRefreshToken((prev) => prev + 1);
         } catch (e) {
             setError(e instanceof Error ? e.message : "Gagal memuat komentar.");
         } finally {
@@ -69,10 +72,7 @@ export default function ForumThreadPage() {
         }
     }
 
-    const totalCount = comments.reduce(
-        (acc, c) => acc + 1 + (c.replies?.length ?? 0),
-        0
-    );
+    const totalCount = countComments(comments);
 
     return (
         <div className="min-h-screen bg-yomu-background">
@@ -215,11 +215,10 @@ export default function ForumThreadPage() {
                         <div className="space-y-3">
                             {comments.map((comment) => (
                                 <CommentCard
-                                    key={comment.id}
+                                    key={`${comment.id}-${refreshToken}`}
                                     comment={comment}
                                     currentUserId={user?.id}
                                     isAdmin={isAdmin}
-                                    readingId={readingId}
                                     onRefresh={loadComments}
                                 />
                             ))}

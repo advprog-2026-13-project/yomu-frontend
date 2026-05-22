@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { fetchReadings } from "@/src/modules/admin/api";
 import { fetchComments } from "@/src/modules/forum/api";
 import { ForumReadingCard, ForumEmptyState } from "@/src/modules/forum/components";
+import { countComments } from "@/src/modules/forum/utils";
 import type { Reading } from "@/src/modules/admin/types";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -27,6 +28,15 @@ interface ReadingWithCount extends Reading {
 }
 
 type SortMode = "activity" | "newest" | "az";
+
+async function getReadingCommentCount(readingId: string): Promise<number> {
+    try {
+        const comments = await fetchComments(readingId);
+        return countComments(comments);
+    } catch {
+        return 0;
+    }
+}
 
 // ─── Stat Pill ───────────────────────────────────────────────────────────────
 
@@ -89,18 +99,10 @@ export default function ForumPage() {
         try {
             const data = await fetchReadings();
             const withCounts = await Promise.all(
-                data.map(async (r) => {
-                    try {
-                        const comments = await fetchComments(r.readingId);
-                        const total = comments.reduce(
-                            (acc, c) => acc + 1 + (c.replies?.length ?? 0),
-                            0
-                        );
-                        return { ...r, commentCount: total };
-                    } catch {
-                        return { ...r, commentCount: 0 };
-                    }
-                })
+                data.map(async (r) => ({
+                    ...r,
+                    commentCount: await getReadingCommentCount(r.readingId),
+                }))
             );
             setReadings(withCounts);
         } catch (err) {
@@ -116,11 +118,14 @@ export default function ForumPage() {
     }, [loadReadings]);
 
     // Filter
-    const filtered = readings.filter(
-        (r) =>
-            r.title.toLowerCase().includes(search.toLowerCase()) ||
-            r.category?.toLowerCase().includes(search.toLowerCase())
-    );
+    const normalizedSearch = search.trim().toLowerCase();
+    const filtered = readings.filter((r) => {
+        if (!normalizedSearch) return true;
+        return (
+            r.title.toLowerCase().includes(normalizedSearch) ||
+            r.category?.toLowerCase().includes(normalizedSearch)
+        );
+    });
 
     // Sort
     const sorted = [...filtered].sort((a, b) => {

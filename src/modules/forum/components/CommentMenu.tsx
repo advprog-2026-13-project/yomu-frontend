@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 interface CommentMenuProps {
     commentId: string;
@@ -24,18 +25,7 @@ export function CommentMenu({
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (!shouldRender) {
-            return;
-        }
-        function handleClick(e: MouseEvent) {
-            if (ref.current && !ref.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClick);
-        return () => document.removeEventListener("mousedown", handleClick);
-    }, [shouldRender]);
+    useOutsideClick(ref, () => setOpen(false), shouldRender && open);
 
     if (!shouldRender) {
         return null;

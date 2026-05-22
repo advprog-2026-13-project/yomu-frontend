@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { SmilePlus } from "lucide-react";
 import type { ReactionType } from "../types";
 import { REACTION_META } from "../types";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 interface ReactionBarProps {
     commentId: string;
@@ -15,15 +16,7 @@ export function ReactionBar({ commentId, reactionCounts, onReact }: ReactionBarP
     const [open, setOpen] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        function handleClick(e: MouseEvent) {
-            if (ref.current && !ref.current.contains(e.target as Node)) {
-                setOpen(false);
-            }
-        }
-        document.addEventListener("mousedown", handleClick);
-        return () => document.removeEventListener("mousedown", handleClick);
-    }, []);
+    useOutsideClick(ref, () => setOpen(false), open);
 
     const reactions = (
         Object.entries(reactionCounts) as [ReactionType, number][]
