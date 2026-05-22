@@ -1,5 +1,4 @@
-import { getToken } from "../auth/api";
-import { BACKEND_URL } from "../admin/constants";
+import { authHeaders, request, api } from "../api";
 import type {
     Clan,
     JoinRequest,
@@ -7,35 +6,6 @@ import type {
     LeaderboardEntry,
     CreateClanInput,
 } from "./types";
-
-function authHeaders(): Record<string, string> {
-    const token = getToken();
-    return token ? { Authorization: `Bearer ${token}` } : {};
-}
-
-async function request<T>(url: string, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(url, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...options.headers,
-        },
-    });
-
-    if (res.status === 204) return undefined as T;
-
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-        throw new Error(data.message || `Request failed with status ${res.status}`);
-    }
-
-    return data;
-}
-
-function api(path: string): string {
-    return `${BACKEND_URL}${path}`;
-}
 
 // Clans
 export async function createClan(input: CreateClanInput): Promise<Clan> {

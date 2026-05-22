@@ -49,6 +49,7 @@ export default function ClanPage() {
     };
 
     if (!hasCheckedClan) {
+        setHasCheckedClan(true);
         checkMyClan();
     }
 
