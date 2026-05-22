@@ -17,6 +17,7 @@ export default defineConfig({
         "src/modules/readings/**/*.{ts,tsx}",
         "src/app/auth/**/*.{ts,tsx}",
         "src/components/auth/**/*.{ts,tsx}",
+        "src/app/components/auth/**/*.{ts,tsx}",
       ],
       exclude: [
         "src/**/*.test.ts",
