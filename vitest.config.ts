@@ -15,6 +15,7 @@ export default defineConfig({
         "src/modules/auth/**/*.{ts,tsx}",
         "src/modules/achievements/**/*.{ts,tsx}",
         "src/modules/readings/**/*.{ts,tsx}",
+        "src/modules/forum/**/*.{ts,tsx}",
         "src/app/auth/**/*.{ts,tsx}",
         "src/components/auth/**/*.{ts,tsx}",
         "src/app/components/auth/**/*.{ts,tsx}",
