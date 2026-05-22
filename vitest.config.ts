@@ -16,6 +16,7 @@ export default defineConfig({
         "src/modules/auth/**/*.tsx",
         "src/app/auth/**/*.tsx",
         "src/components/auth/**/*.tsx",
+        "src/app/components/auth/**/*.tsx",
       ],
       exclude: [
         "src/**/*.test.ts",
