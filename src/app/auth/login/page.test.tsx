@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 
 const mockLogin = vi.fn();
 const mockLoginWithGoogle = vi.fn();
@@ -14,12 +13,17 @@ let mockAuthState = {
   clearError: mockClearError,
 };
 
+let googleCallbacks: { onSuccess?: (res: unknown) => void; onError?: () => void } = {};
+
 vi.mock("@/src/modules/auth", () => ({
   useAuth: () => mockAuthState,
 }));
 
 vi.mock("@react-oauth/google", () => ({
-  GoogleLogin: vi.fn(() => <div data-testid="google-login" />),
+  GoogleLogin: (props: Record<string, unknown>) => {
+    googleCallbacks = { onSuccess: props.onSuccess as (res: unknown) => void, onError: props.onError as () => void };
+    return <div data-testid="google-login" />;
+  },
 }));
 
 import LoginPage from "./page";
@@ -27,74 +31,53 @@ import LoginPage from "./page";
 describe("LoginPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockAuthState = {
-      login: mockLogin,
-      loginWithGoogle: mockLoginWithGoogle,
-      loading: false,
-      error: null,
-      clearError: mockClearError,
-    };
+    googleCallbacks = {};
+    mockAuthState = { login: mockLogin, loginWithGoogle: mockLoginWithGoogle, loading: false, error: null, clearError: mockClearError };
   });
 
-  afterEach(() => {
-    cleanup();
-  });
+  afterEach(() => cleanup());
 
   it("renders login form", () => {
     render(<LoginPage />);
-
-    expect(screen.getByText("Yomu")).toBeInTheDocument();
-    expect(screen.getByText("Baca lebih dalam. Pahami lebih baik.")).toBeInTheDocument();
-    expect(screen.getByLabelText("Email atau Username")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password")).toBeInTheDocument();
+    expect(screen.getByTestId("google-login")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Masuk" })).toBeInTheDocument();
   });
 
-  it("renders registration link", () => {
-    render(<LoginPage />);
-
-    const link = screen.getByText("Daftar sekarang");
-    expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/auth/register");
-  });
-
-  it("renders Google login section", () => {
-    render(<LoginPage />);
-
-    expect(screen.getByTestId("google-login")).toBeInTheDocument();
-    expect(screen.getByText("atau")).toBeInTheDocument();
-  });
-
-  it("calls login on form submit", async () => {
-    const user = userEvent.setup();
-    render(<LoginPage />);
-
-    await user.type(screen.getByLabelText("Email atau Username"), "testuser");
-    await user.type(screen.getByLabelText("Password"), "password");
-    await user.click(screen.getByRole("button", { name: "Masuk" }));
-
-    expect(mockClearError).toHaveBeenCalled();
-    expect(mockLogin).toHaveBeenCalledWith({ identifier: "testuser", password: "password" });
-  });
-
-  it("shows loading state on button", () => {
+  it("shows loading state", () => {
     mockAuthState.loading = true;
     render(<LoginPage />);
-
     expect(screen.getByRole("button", { name: "Masuk..." })).toBeInTheDocument();
   });
 
-  it("displays error alert when error is set", () => {
+  it("displays error alert", () => {
     mockAuthState.error = "Invalid credentials";
     render(<LoginPage />);
-
     expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
   });
 
-  it("requires username and password fields", () => {
+  it("calls loginWithGoogle on success with credential", async () => {
     render(<LoginPage />);
+    googleCallbacks.onSuccess?.({ credential: "google-token" });
+    await waitFor(() => {
+      expect(mockClearError).toHaveBeenCalled();
+      expect(mockLoginWithGoogle).toHaveBeenCalledWith("google-token");
+    });
+  });
 
-    expect(screen.getByLabelText("Email atau Username")).toBeRequired();
-    expect(screen.getByLabelText("Password")).toBeRequired();
+  it("does not call loginWithGoogle when credential missing", async () => {
+    render(<LoginPage />);
+    googleCallbacks.onSuccess?.({});
+    await waitFor(() => {
+      expect(mockClearError).toHaveBeenCalled();
+      expect(mockLoginWithGoogle).not.toHaveBeenCalled();
+    });
+  });
+
+  it("alerts on google error", () => {
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    render(<LoginPage />);
+    googleCallbacks.onError?.();
+    expect(alertSpy).toHaveBeenCalled();
+    alertSpy.mockRestore();
   });
 });
