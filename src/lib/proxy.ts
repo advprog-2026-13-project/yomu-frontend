@@ -13,6 +13,7 @@ export function createProxy(apiPrefix: string) {
     });
 
     try {
+      console.log("[BFF proxy]", req.method, url);
       const res = await fetch(url, {
         method: req.method,
         headers,
@@ -20,11 +21,13 @@ export function createProxy(apiPrefix: string) {
       });
 
       const data = await res.text();
+      console.log("[BFF response]", res.status, url);
       return new NextResponse(data, {
         status: res.status,
         headers: { "Content-Type": res.headers.get("Content-Type") || "application/json" },
       });
-    } catch {
+    } catch (e) {
+      console.error("[BFF error]", url, e);
       return new NextResponse(JSON.stringify({ error: "Backend unreachable" }), {
         status: 502,
         headers: { "Content-Type": "application/json" },
