@@ -131,30 +131,6 @@ export default function LoginPage() {
                 illustrationIcon={
                     <BookOpen className="w-32 h-32 text-white/80" strokeWidth={1.5} />
                 }
-                socialProof={
-                    <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl" style={{ maxWidth: "380px", margin: "0 auto" }}>
-                        <div className="flex items-center gap-3">
-                            <div className="text-4xl">🔥</div>
-                            <div>
-                                <p className="text-2xl font-bold" style={{ color: "#2C2C2A" }}>
-                                    12.400
-                                </p>
-                                <p style={{ color: "#5F5E5A" }}>pelajar aktif minggu ini</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-                floatingBadge={
-                    <div className="text-center">
-                        <div className="text-3xl mb-1">⭐</div>
-                        <p className="text-xs font-medium" style={{ color: "#EF9F27" }}>
-                            +50 XP
-                        </p>
-                        <p className="text-xs" style={{ color: "#5F5E5A" }}>
-                            Artikel Selesai
-                        </p>
-                    </div>
-                }
             />
         </div>
     );

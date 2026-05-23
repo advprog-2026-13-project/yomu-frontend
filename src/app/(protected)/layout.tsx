@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { getToken } from "@/src/modules/auth/api";
 import { useAuth, type User as AuthUser } from "@/src/modules/auth";
 import Link from "next/link";
-import { BookOpen, Trophy, Target, MessageSquare, LayoutDashboard, User, LogOut, X, Sparkles } from "lucide-react";
+import { BookOpen, Trophy, Target, MessageSquare, User, LogOut, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +29,6 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
     }
 
     const navLinks = [
-        { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
         { href: "/readings", label: "Katalog", icon: BookOpen },
         { href: "/achievements", label: "Pencapaian", icon: Target },
         { href: "/league", label: "League", icon: Trophy },
@@ -56,10 +55,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                     <nav className="flex-1 flex justify-center gap-1 md:gap-2 overflow-x-auto px-4">
                         {navLinks.map((link) => {
                             const Icon = link.icon;
-                            // Check precise match for admin or dashboard to prevent sub-route highlight confusion
-                            const isActive = link.href === "/dashboard" 
-                                ? pathname === "/dashboard" 
-                                : pathname.startsWith(link.href);
+                            const isActive = pathname.startsWith(link.href);
                             return (
                                 <Link 
                                     key={link.href} 

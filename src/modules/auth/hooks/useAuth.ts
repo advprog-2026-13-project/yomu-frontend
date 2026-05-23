@@ -17,7 +17,7 @@ export function useAuth() {
             const token = res.token ?? res.accessToken ?? res.jwt;
             if (!token) throw new Error("Token not found in response");
             authApi.setToken(token);
-            router.push("/dashboard");
+            router.push("/readings");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Login failed");
         } finally {
@@ -46,7 +46,7 @@ export function useAuth() {
             const token = res.token ?? res.accessToken ?? res.jwt;
             if (!token) throw new Error("Token not found in response");
             authApi.setToken(token);
-            router.push("/dashboard");
+            router.push("/readings");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Google login failed");
         } finally {

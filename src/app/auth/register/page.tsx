@@ -172,36 +172,6 @@ export default function RegisterPage() {
                 illustrationIcon={
                     <Award className="w-32 h-32 text-white/80" strokeWidth={1.5} />
                 }
-                socialProof={
-                    <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-2xl" style={{ maxWidth: "380px", margin: "0 auto" }}>
-                        <div className="space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div className="size-12 rounded-full flex items-center justify-center text-2xl" style={{ backgroundColor: "#E1F5EE" }}>
-                                    🎯
-                                </div>
-                                <div>
-                                    <p className="font-semibold" style={{ color: "#2C2C2A" }}>
-                                        Pencapaian Mingguan
-                                    </p>
-                                    <p className="text-sm" style={{ color: "#5F5E5A" }}>
-                                        Raih XP dan badge eksklusif
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-                floatingBadge={
-                    <div className="text-center">
-                        <div className="text-3xl mb-1">🛡️</div>
-                        <p className="text-xs font-medium" style={{ color: "#1D9E75" }}>
-                            Bergabung dengan Clan
-                        </p>
-                        <p className="text-xs" style={{ color: "#5F5E5A" }}>
-                            Kompetisi tim
-                        </p>
-                    </div>
-                }
             />
         </div>
     );
