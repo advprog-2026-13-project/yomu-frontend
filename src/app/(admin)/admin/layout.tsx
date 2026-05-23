@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         fetchUser()
             .then((data) => {
                 if (data.role !== "ADMIN") {
-                    router.replace("/dashboard");
+                    router.replace("/readings");
                 } else {
                     setLoading(false);
                 }

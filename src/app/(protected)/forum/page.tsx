@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetchReadings } from "@/src/modules/admin/api";
+import { fetchReadings } from "@/src/modules/readings/api";
 import { fetchComments } from "@/src/modules/forum/api";
 import { ForumReadingCard, ForumEmptyState } from "@/src/modules/forum/components";
 import { countComments } from "@/src/modules/forum/utils";
-import type { Reading } from "@/src/modules/admin/types";
+import type { Reading } from "@/src/modules/readings/types";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -284,7 +284,7 @@ export default function ForumPage() {
                                         key={reading.readingId}
                                         readingId={reading.readingId}
                                         title={reading.title}
-                                        category={reading.category}
+                                        category={reading.category ?? undefined}
                                         commentCount={reading.commentCount}
                                         rank={idx + 1}
                                     />
