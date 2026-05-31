@@ -38,6 +38,10 @@ export async function getClanById(clanId: string): Promise<Clan> {
     return request<Clan>(api(`/api/social/clans/${clanId}`), { headers: authHeaders() });
 }
 
+export async function getClanMembers(clanId: string): Promise<ClanMember[]> {
+    return request<ClanMember[]>(api(`/api/social/clans/${clanId}/members`), { headers: authHeaders() });
+}
+
 // Join Requests
 export async function requestToJoinClan(clanId: string): Promise<JoinRequest> {
     return request<JoinRequest>(api(`/api/social/clans/${clanId}/join-requests`), {

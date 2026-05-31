@@ -13,6 +13,7 @@ export interface JoinRequest {
     id: string;
     clanId: string;
     userId: string;
+    username: string | null;
     status: "PENDING" | "APPROVED" | "REJECTED";
     createdAt: string;
     resolvedAt: string | null;
@@ -21,6 +22,7 @@ export interface JoinRequest {
 export interface ClanMember {
     id: string;
     userId: string;
+    username: string | null;
     role: "LEADER" | "MEMBER";
     joinedAt: string;
 }
