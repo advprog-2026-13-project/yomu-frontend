@@ -30,7 +30,7 @@ describe("useAuth", () => {
       });
 
       expect(authApi.getToken()).toBe("jwt-token");
-      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+      expect(mockPush).toHaveBeenCalledWith("/readings");
       expect(result.current.error).toBeNull();
     });
 
@@ -100,7 +100,7 @@ describe("useAuth", () => {
       });
 
       expect(authApi.getToken()).toBe("google-jwt");
-      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+      expect(mockPush).toHaveBeenCalledWith("/readings");
     });
 
     it("sets error when token is missing", async () => {

@@ -60,7 +60,7 @@ export default function AdminReadingsPage() {
 
     useEffect(() => {
         if (user && user.role !== "ADMIN") {
-            router.replace("/dashboard");
+            router.replace("/readings");
         }
     }, [user, router]);
 

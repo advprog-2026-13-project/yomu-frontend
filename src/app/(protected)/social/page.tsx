@@ -191,11 +191,8 @@ export default function SocialPage() {
 
     return (
         <div className="min-h-screen bg-yomu-background">
-
-            {/* ── Hero ── */}
             <div className="bg-gradient-to-br from-yomu-primary-dark via-yomu-primary to-[#2ab888] text-white">
                 <div className="max-w-5xl mx-auto px-4 py-12 md:py-16">
-                    {/* Icon + label */}
                     <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
                             <Swords className="h-6 w-6 text-white" />
@@ -214,7 +211,6 @@ export default function SocialPage() {
                             : "Bergabung dengan clan, kumpulkan poin bersama, dan bersaing di liga."}
                     </p>
 
-                    {/* Stat pills — shown when clan data loaded */}
                     {!loading && myClan && tierCfg && (
                         <div className="flex flex-wrap gap-3 mt-8">
                             <Link href={`/social/leaderboard?tier=${myClan.tier}`}>
@@ -228,14 +224,10 @@ export default function SocialPage() {
                             <StatPill icon={Users} value={myClan.memberCount} label="anggota" />
                         </div>
                     )}
-
                 </div>
             </div>
 
-            {/* ── Content ── */}
             <div className="max-w-5xl mx-auto px-4 py-8 space-y-5">
-
-                {/* Leaderboard shortcut — always visible */}
                 <Link href="/social/leaderboard" className="block group">
                     <div className="bg-yomu-surface border border-yomu-accent/30 rounded-2xl px-6 py-4 shadow-sm flex items-center justify-between hover:border-yomu-accent/60 hover:shadow-md transition-all duration-200 cursor-pointer">
                         <div className="flex items-center gap-4">
@@ -261,7 +253,6 @@ export default function SocialPage() {
                     </Alert>
                 )}
 
-                {/* Loading */}
                 {loading && (
                     <div className="flex flex-col items-center justify-center py-20 gap-4">
                         <div className="relative">
@@ -274,10 +265,8 @@ export default function SocialPage() {
                     </div>
                 )}
 
-                {/* ── No clan ── */}
                 {!loading && !myClan && (
                     <div className="grid md:grid-cols-2 gap-5">
-                        {/* Create */}
                         <div className="bg-yomu-surface border border-yomu-border rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 rounded-2xl bg-yomu-primary-light flex items-center justify-center text-yomu-primary shadow-inner">
@@ -312,7 +301,6 @@ export default function SocialPage() {
                             </form>
                         </div>
 
-                        {/* Search & Join */}
                         <div className="bg-yomu-surface border border-yomu-border rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 rounded-2xl bg-yomu-accent-light flex items-center justify-center text-yomu-accent shadow-inner">
@@ -366,12 +354,9 @@ export default function SocialPage() {
                     </div>
                 )}
 
-                {/* ── Has clan ── */}
                 {!loading && myClan && tierCfg && (
                     <>
-                        {/* Clan info card */}
                         <div className="bg-yomu-surface border border-yomu-border rounded-2xl overflow-hidden shadow-sm">
-                            {/* Tier accent top bar */}
                             <div className="h-1.5" style={{ backgroundColor: tierCfg.accentHex }} />
                             <div className="px-6 pt-5 pb-5">
                                 <div className="flex items-start justify-between gap-4">
@@ -422,7 +407,6 @@ export default function SocialPage() {
                             )}
                         </div>
 
-                        {/* Join requests (expandable) — leader only */}
                         {isLeader && <div className="bg-yomu-surface border border-yomu-border rounded-2xl overflow-hidden shadow-sm">
                             <button
                                 className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-yomu-background transition-colors duration-150 cursor-pointer"
@@ -484,7 +468,6 @@ export default function SocialPage() {
                             )}
                         </div>}
 
-                        {/* Search other clans */}
                         <div className="bg-yomu-surface border border-yomu-border rounded-2xl p-6 shadow-sm">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-10 h-10 rounded-2xl bg-yomu-background flex items-center justify-center text-yomu-text-secondary">
@@ -523,7 +506,6 @@ export default function SocialPage() {
                             )}
                         </div>
 
-                        {/* Danger zone — leader only */}
                         {isLeader && (
                             <div className="bg-yomu-surface border border-yomu-destructive/25 rounded-2xl p-6 shadow-sm">
                                 <h2 className="text-base font-bold text-yomu-destructive mb-1">Zona Berbahaya</h2>

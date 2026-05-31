@@ -47,7 +47,7 @@ export default function AdminAchievementsPage() {
 
     useEffect(() => {
         if (user && user.role !== "ADMIN") {
-            router.replace("/dashboard");
+            router.replace("/readings");
         }
     }, [user, router]);
 

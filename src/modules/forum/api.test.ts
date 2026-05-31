@@ -25,7 +25,7 @@ describe("forum api", () => {
 
     expect(result).toEqual([]);
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/reading-1/comments",
+      "/api/forums/reading-1/comments",
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: "Bearer token" }),
       })
@@ -40,7 +40,7 @@ describe("forum api", () => {
     await forumApi.postComment("reading-2", { content: "Hi" });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/reading-2/comments",
+      "/api/forums/reading-2/comments",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ content: "Hi" }),
@@ -56,7 +56,7 @@ describe("forum api", () => {
     await forumApi.replyToComment("comment-1", { content: "Reply" });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/comments/comment-1/replies",
+      "/api/forums/comments/comment-1/replies",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ content: "Reply" }),
@@ -72,7 +72,7 @@ describe("forum api", () => {
     await forumApi.editComment("comment-2", { newContent: "Updated" });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/comments/comment-2",
+      "/api/forums/comments/comment-2",
       expect.objectContaining({
         method: "PUT",
         body: JSON.stringify({ newContent: "Updated" }),
@@ -88,7 +88,7 @@ describe("forum api", () => {
     await forumApi.deleteComment("comment-3");
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/comments/comment-3",
+      "/api/forums/comments/comment-3",
       expect.objectContaining({ method: "DELETE" })
     );
   });
@@ -101,7 +101,7 @@ describe("forum api", () => {
     await forumApi.deleteCommentAsAdmin("comment-4");
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/admin/forums/comments/comment-4",
+      "/api/admin/forums/comments/comment-4",
       expect.objectContaining({ method: "DELETE" })
     );
   });
@@ -114,7 +114,7 @@ describe("forum api", () => {
     await forumApi.toggleReaction("comment-5", { type: "UPVOTE" });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:8080/api/forums/comments/comment-5/reactions",
+      "/api/forums/comments/comment-5/reactions",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ type: "UPVOTE" }),

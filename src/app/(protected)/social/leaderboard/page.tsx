@@ -33,8 +33,8 @@ function getZones(n: number, tierIndex: number): Zone[] {
     const relegationCount = tierIndex > 0                ? Math.max(1, Math.ceil(n * 0.15))  : 0;
     return Array.from({ length: n }, (_, i) => {
         const rank = i + 1;
-        if (promotionCount > 0 && rank <= promotionCount)          return "promotion";
-        if (relegationCount > 0 && rank > n - relegationCount)     return "relegation";
+        if (promotionCount > 0 && rank <= promotionCount)      return "promotion";
+        if (relegationCount > 0 && rank > n - relegationCount) return "relegation";
         return "safe";
     });
 }
@@ -106,8 +106,6 @@ export default function LeaderboardPage() {
 
     return (
         <div className="min-h-screen bg-yomu-background">
-
-            {/* ── Hero ── */}
             <div className={`bg-gradient-to-br ${config.heroGradient} text-white`}>
                 <div className="max-w-5xl mx-auto px-4 pt-10 pb-16">
                     <div className="flex items-center gap-3 mb-3">
@@ -119,12 +117,8 @@ export default function LeaderboardPage() {
                         </span>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold mb-2 leading-tight">Leaderboard</h1>
-                    <p className="text-white/70 text-base max-w-md">
-                        Top 25% naik tier · Bottom 15% turun tier · Diperbarui setiap akhir season.
-                    </p>
 
-                    {/* Tier selector */}
-                    <div className="flex flex-wrap gap-2 mt-8">
+                    <div className="flex flex-wrap gap-2 mt-6">
                         {TIERS.map((t) => {
                             const isActive = tier === t;
                             const cfg = tierConfig[t];
@@ -148,7 +142,6 @@ export default function LeaderboardPage() {
                 </div>
             </div>
 
-            {/* ── Content ── */}
             <div className="max-w-5xl mx-auto px-4 -mt-6 pb-10 space-y-4">
                 {error && (
                     <Alert variant="destructive">
@@ -156,10 +149,7 @@ export default function LeaderboardPage() {
                     </Alert>
                 )}
 
-                {/* Rankings card */}
                 <div className="bg-yomu-surface rounded-2xl border border-yomu-border overflow-hidden shadow-sm">
-
-                    {/* Column header */}
                     {!loading && entries.length > 0 && (
                         <div className="flex items-center gap-4 px-5 py-2.5 bg-yomu-background border-b border-yomu-border">
                             <div className="w-9 shrink-0" />
@@ -168,12 +158,10 @@ export default function LeaderboardPage() {
                         </div>
                     )}
 
-                    {/* Loading */}
                     {loading && (
                         <ol>{[0, 1, 2, 3, 4].map((i) => <SkeletonRow key={i} />)}</ol>
                     )}
 
-                    {/* Empty state */}
                     {!loading && entries.length === 0 && (
                         <div className="flex flex-col items-center justify-center py-16 px-6 text-center gap-4">
                             <div className="w-16 h-16 rounded-2xl flex items-center justify-center"
@@ -191,14 +179,12 @@ export default function LeaderboardPage() {
                         </div>
                     )}
 
-                    {/* Ranked list with zone dividers */}
                     {!loading && entries.length > 0 && (
                         <ol>
                             {entries.map((entry, i) => {
                                 const zone     = zones[i];
                                 const prevZone = i > 0 ? zones[i - 1] : null;
 
-                                // Insert divider before this row if zone changes
                                 const showPromoDivider = zone !== "promotion" && prevZone === "promotion" && nextTier;
                                 const showReleDivider  = zone === "relegation" && prevZone !== "relegation" && prevTier;
 
@@ -227,12 +213,12 @@ export default function LeaderboardPage() {
                                                 href={`/social/clan/${entry.clanId}`}
                                                 className="flex items-center gap-4 px-5 py-3.5 hover:brightness-95 transition-all duration-100 cursor-pointer"
                                             >
-                                            <RankCircle rank={entry.rank} />
-                                            <span className="flex-1 text-sm font-medium text-yomu-foreground">{entry.clanName}</span>
-                                            <span className={`text-sm tabular-nums font-semibold ${scoreColor}`}>
-                                                {entry.score.toLocaleString("id-ID")}
-                                            </span>
-                                            <ChevronRight className="w-4 h-4 text-yomu-text-secondary/40 shrink-0" />
+                                                <RankCircle rank={entry.rank} />
+                                                <span className="flex-1 text-sm font-medium text-yomu-foreground">{entry.clanName}</span>
+                                                <span className={`text-sm tabular-nums font-semibold ${scoreColor}`}>
+                                                    {entry.score.toLocaleString("id-ID")}
+                                                </span>
+                                                <ChevronRight className="w-4 h-4 text-yomu-text-secondary/40 shrink-0" />
                                             </Link>
                                         </li>
                                     </>
@@ -242,7 +228,6 @@ export default function LeaderboardPage() {
                     )}
                 </div>
 
-                {/* Legend */}
                 {!loading && entries.length > 0 && (
                     <div className="flex flex-wrap items-center justify-center gap-4 py-1 text-xs text-yomu-text-secondary">
                         {nextTier && (

@@ -12,12 +12,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { fetchComments, postComment } from "@/src/modules/forum/api";
-import { fetchReadings } from "@/src/modules/admin/api";
+import { fetchReadings } from "@/src/modules/readings/api";
 import { useAuth } from "@/src/modules/auth";
 import { Avatar, CommentCard, CommentInput } from "@/src/modules/forum/components";
 import { countComments } from "@/src/modules/forum/utils";
 import type { CommentView } from "@/src/modules/forum/types";
-import type { Reading } from "@/src/modules/admin/types";
+import type { Reading } from "@/src/modules/readings/types";
 // ─── Main Page ───────────────────────────────────────────────────────────────
 
 export default function ForumThreadPage() {

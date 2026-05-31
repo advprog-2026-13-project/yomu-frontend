@@ -1,7 +1,7 @@
 interface AuthVisualPanelProps {
-    illustrationIcon: React.ReactNode;
-    socialProof: React.ReactNode;
-    floatingBadge: React.ReactNode;
+    illustrationIcon?: React.ReactNode;
+    socialProof?: React.ReactNode;
+    floatingBadge?: React.ReactNode;
 }
 
 export function AuthVisualPanel({ illustrationIcon, socialProof, floatingBadge }: AuthVisualPanelProps) {
@@ -18,17 +18,21 @@ export function AuthVisualPanel({ illustrationIcon, socialProof, floatingBadge }
             </div>
 
             <div className="relative z-10 max-w-lg px-12">
-                <div className="mb-8 relative">
-                    <div className="w-64 h-64 mx-auto rounded-3xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                        {illustrationIcon}
+                {illustrationIcon && (
+                    <div className="mb-8 relative">
+                        <div className="w-64 h-64 mx-auto rounded-3xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                            {illustrationIcon}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {socialProof}
 
-                <div className="absolute top-20 right-12 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-xl rotate-6" style={{ width: "140px" }}>
-                    {floatingBadge}
-                </div>
+                {floatingBadge && (
+                    <div className="absolute top-20 right-12 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-xl rotate-6" style={{ width: "140px" }}>
+                        {floatingBadge}
+                    </div>
+                )}
             </div>
         </div>
     );
