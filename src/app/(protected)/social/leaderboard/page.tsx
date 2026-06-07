@@ -7,6 +7,7 @@ import { Trophy, Users, Crown, Star, Shield, Gem, Award, ChevronRight } from "lu
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { LeaderboardEntry, ClanTier } from "@/src/modules/social/types";
 import { getLeaderboard } from "@/src/modules/social/api";
+import { ModifierBadges } from "@/src/modules/social/components/ModifierBadges";
 
 const TIERS: ClanTier[] = ["BRONZE", "SILVER", "GOLD", "DIAMOND"];
 
@@ -214,7 +215,10 @@ export default function LeaderboardPage() {
                                                 className="flex items-center gap-4 px-5 py-3.5 hover:brightness-95 transition-all duration-100 cursor-pointer"
                                             >
                                                 <RankCircle rank={entry.rank} />
-                                                <span className="flex-1 text-sm font-medium text-yomu-foreground">{entry.clanName}</span>
+                                                <span className="flex-1 flex items-center gap-2 min-w-0">
+                                                    <span className="text-sm font-medium text-yomu-foreground truncate">{entry.clanName}</span>
+                                                    <ModifierBadges buffActive={entry.buffActive} debuffActive={entry.debuffActive} size="sm" showLabel={false} />
+                                                </span>
                                                 <span className={`text-sm tabular-nums font-semibold ${scoreColor}`}>
                                                     {entry.score.toLocaleString("id-ID")}
                                                 </span>

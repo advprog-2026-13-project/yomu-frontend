@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/src/modules/auth";
+import { ModifierBadges } from "@/src/modules/social/components/ModifierBadges";
 import type { Clan, ClanMember } from "@/src/modules/social/types";
 import { getClanById, getClanMembers } from "@/src/modules/social/api";
 
@@ -131,6 +132,14 @@ export default function ClanDetailPage() {
                             {isMyMember && (
                                 <div className="flex items-center gap-2 bg-white/25 backdrop-blur-sm rounded-full px-4 py-2 text-sm font-semibold">
                                     {myRole === "LEADER" ? "Ketua" : "Anggota"} clan ini
+                                </div>
+                            )}
+                            {clan.modifiers && (clan.modifiers.productivityBuffActive || clan.modifiers.lowAccuracyPenaltyActive) && (
+                                <div className="flex items-center">
+                                    <ModifierBadges
+                                        buffActive={clan.modifiers.productivityBuffActive}
+                                        debuffActive={clan.modifiers.lowAccuracyPenaltyActive}
+                                    />
                                 </div>
                             )}
                         </div>

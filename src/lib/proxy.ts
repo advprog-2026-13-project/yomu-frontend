@@ -19,6 +19,10 @@ export function createProxy(apiPrefix: string) {
         body: req.method !== "GET" && req.method !== "HEAD" ? await req.text() : undefined,
       });
 
+      if (res.status === 204) {
+        return new NextResponse(null, { status: 204 });
+      }
+
       const data = await res.text();
       return new NextResponse(data, {
         status: res.status,

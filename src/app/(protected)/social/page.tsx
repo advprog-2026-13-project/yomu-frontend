@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/src/modules/auth";
+import { ModifierBadges } from "@/src/modules/social/components/ModifierBadges";
 import type { Clan, JoinRequest } from "@/src/modules/social/types";
 import {
     createClan, getMyClan, leaveClan, deleteClan, getClanById,
@@ -128,6 +129,7 @@ export default function SocialPage() {
         try {
             await leaveClan(); setMyClan(null); notify("Kamu telah meninggalkan clan");
         } catch (err) {
+            await checkMyClan();
             notify(err instanceof Error ? err.message : "Gagal meninggalkan clan", true);
         } finally { setActionLoading(null); }
     };
@@ -138,6 +140,7 @@ export default function SocialPage() {
         try {
             await deleteClan(myClan!.id); setMyClan(null); notify("Clan dihapus");
         } catch (err) {
+            await checkMyClan();
             notify(err instanceof Error ? err.message : "Gagal menghapus clan", true);
         } finally { setActionLoading(null); }
     };
@@ -382,6 +385,12 @@ export default function SocialPage() {
                                             </span>
                                             <span className="text-sm text-yomu-text-secondary">{myClan.memberCount} anggota</span>
                                         </div>
+                                        {myClan.modifiers && (myClan.modifiers.productivityBuffActive || myClan.modifiers.lowAccuracyPenaltyActive) && (
+                                            <ModifierBadges
+                                                buffActive={myClan.modifiers.productivityBuffActive}
+                                                debuffActive={myClan.modifiers.lowAccuracyPenaltyActive}
+                                            />
+                                        )}
                                     </div>
                                     <Button variant="ghost" size="sm" onClick={checkMyClan} disabled={loading} className="cursor-pointer shrink-0 mt-1">
                                         <RefreshCw className="size-4" />
