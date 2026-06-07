@@ -13,18 +13,25 @@ export function createProxy(apiPrefix: string) {
     });
 
     try {
+      const body =
+        req.method !== "GET" && req.method !== "HEAD"
+          ? await req.text()
+          : undefined;
+
       console.log("[BFF proxy]", req.method, url);
       const res = await fetch(url, {
         method: req.method,
         headers,
-        body: req.method !== "GET" && req.method !== "HEAD" ? await req.text() : undefined,
+        body: body || undefined,
       });
 
       const data = await res.text();
       console.log("[BFF response]", res.status, url);
-      return new NextResponse(data, {
+      return new NextResponse(res.status === 204 ? null : data, {
         status: res.status,
-        headers: { "Content-Type": res.headers.get("Content-Type") || "application/json" },
+        headers: res.status !== 204
+          ? { "Content-Type": res.headers.get("Content-Type") || "application/json" }
+          : undefined,
       });
     } catch (e) {
       console.error("[BFF error]", url, e);
