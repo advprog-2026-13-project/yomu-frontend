@@ -7,7 +7,6 @@ import type {
     CreateClanInput,
 } from "./types";
 
-// Clans
 export async function createClan(input: CreateClanInput): Promise<Clan> {
     return request<Clan>("/api/social/clans", {
         method: "POST",
@@ -38,7 +37,10 @@ export async function getClanById(clanId: string): Promise<Clan> {
     return request<Clan>(`/api/social/clans/${clanId}`, { headers: authHeaders() });
 }
 
-// Join Requests
+export async function getClanMembers(clanId: string): Promise<ClanMember[]> {
+    return request<ClanMember[]>(`/api/social/clans/${clanId}/members`, { headers: authHeaders() });
+}
+
 export async function requestToJoinClan(clanId: string): Promise<JoinRequest> {
     return request<JoinRequest>(`/api/social/clans/${clanId}/join-requests`, {
         method: "POST",
@@ -64,12 +66,10 @@ export async function rejectJoinRequest(clanId: string, requestId: string): Prom
     });
 }
 
-// Leaderboard
 export async function getLeaderboard(tier: string): Promise<LeaderboardEntry[]> {
     return request<LeaderboardEntry[]>(`/api/social/leaderboard?tier=${tier}`);
 }
 
-// Admin Social
 export async function adminGetClans(): Promise<Clan[]> {
     return request<Clan[]>("/api/admin/social/clans", { headers: authHeaders() });
 }

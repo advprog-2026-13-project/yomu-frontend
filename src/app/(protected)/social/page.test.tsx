@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, cleanup } from "@testing-library/react";
 
 vi.mock("@/src/modules/auth", () => ({
     useAuth: () => ({ user: null, loading: false }),
@@ -33,18 +33,17 @@ describe("ClanPage", () => {
 
     it("renders clan heading", () => {
         render(<ClanPage />);
-        expect(screen.getByText("Clan")).toBeInTheDocument();
+        expect(screen.getByText("Clan & Liga")).toBeInTheDocument();
     });
 
     it("renders create clan form after loading", async () => {
         render(<ClanPage />);
-        await waitFor(() => {
-            expect(screen.getByText("Create Your Clan")).toBeInTheDocument();
-        });
+        const headings = await screen.findAllByText("Buat Clan");
+        expect(headings.length).toBeGreaterThanOrEqual(2);
     });
 
-    it("renders browse clans section", () => {
+    it("renders leaderboard link", () => {
         render(<ClanPage />);
-        expect(screen.getByText("Browse Clans")).toBeInTheDocument();
+        expect(screen.getByText("Liga & Leaderboard")).toBeInTheDocument();
     });
 });

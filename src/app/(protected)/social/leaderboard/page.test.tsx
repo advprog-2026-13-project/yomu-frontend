@@ -12,6 +12,14 @@ vi.mock("@/src/modules/social/api", () => ({
     getLeaderboard: vi.fn(() => Promise.resolve([])),
 }));
 
+vi.mock("next/navigation", async () => {
+    const actual = await vi.importActual<typeof import("next/navigation")>("next/navigation");
+    return {
+        ...actual,
+        useSearchParams: () => new URLSearchParams("tier=BRONZE"),
+    };
+});
+
 import LeaderboardPage from "./page";
 
 describe("LeaderboardPage", () => {
@@ -30,9 +38,9 @@ describe("LeaderboardPage", () => {
 
     it("renders tier filter buttons", () => {
         render(<LeaderboardPage />);
-        expect(screen.getByText("BRONZE")).toBeInTheDocument();
-        expect(screen.getByText("SILVER")).toBeInTheDocument();
-        expect(screen.getByText("GOLD")).toBeInTheDocument();
-        expect(screen.getByText("DIAMOND")).toBeInTheDocument();
+        expect(screen.getByText("Bronze")).toBeInTheDocument();
+        expect(screen.getByText("Silver")).toBeInTheDocument();
+        expect(screen.getByText("Gold")).toBeInTheDocument();
+        expect(screen.getByText("Diamond")).toBeInTheDocument();
     });
 });
