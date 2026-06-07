@@ -14,6 +14,7 @@ import type {
     UpdateDailyMissionInput,
     AdminUser,
 } from "./types";
+import type { CommentView } from "../forum/types";
 
 // Readings
 export async function fetchReadings(): Promise<Reading[]> {
@@ -128,6 +129,10 @@ export async function deleteDailyMission(id: string): Promise<void> {
 }
 
 // Forum
+export async function fetchAllComments(): Promise<CommentView[]> {
+    return request<CommentView[]>("/api/admin/forums/comments", { headers: authHeaders() });
+}
+
 export async function deleteForumComment(id: string): Promise<void> {
     return request<void>(`/api/admin/forums/comments/${id}`, {
         method: "DELETE",
