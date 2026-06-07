@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Trash2, Loader2, AlertCircle, MessageSquare, Search, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { Trash2, Loader2, MessageSquare, Search, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { fetchAllComments, deleteForumComment } from "@/src/modules/admin/api";
 import type { CommentView } from "@/src/modules/forum/types";
@@ -16,6 +16,7 @@ export default function ForumPage() {
     const [message, setMessage] = useState<string | null>(null);
     const [isError, setIsError] = useState(false);
     const [deleting, setDeleting] = useState<string | null>(null);
+    const [initialized, setInitialized] = useState(false);
 
     const loadComments = async () => {
         setLoading(true);
@@ -31,9 +32,10 @@ export default function ForumPage() {
         }
     };
 
-    useEffect(() => {
+    if (!initialized) {
+        setInitialized(true);
         loadComments();
-    }, []);
+    }
 
     const handleDelete = async (id: string) => {
         if (!confirm("Delete this comment permanently?")) return;
