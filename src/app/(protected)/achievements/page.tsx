@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Trophy, Target, Award, Star, ArrowRight, Calendar, Loader2 } from "lucide-react";
 import { useMasterAchievements, useUserAchievements } from "@/src/modules/achievements/hooks";
 import { AchievementBadge } from "@/src/modules/achievements/components/AchievementBadge";
