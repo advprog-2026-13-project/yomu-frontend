@@ -38,8 +38,8 @@ describe("ClanPage", () => {
 
     it("renders create clan form after loading", async () => {
         render(<ClanPage />);
-        const createButton = await screen.findByText("Buat Clan");
-        expect(createButton).toBeInTheDocument();
+        const headings = await screen.findAllByText("Buat Clan");
+        expect(headings.length).toBeGreaterThanOrEqual(2);
     });
 
     it("renders leaderboard link", () => {
