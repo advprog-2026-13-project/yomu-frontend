@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Trophy, Target, Award, Star, ArrowRight, Calendar, Loader2 } from "lucide-react";
 import { useMasterAchievements, useUserAchievements } from "@/src/modules/achievements/hooks";
+import { AchievementBadge } from "@/src/modules/achievements/components/AchievementBadge";
+import { achievementTypeLabel } from "@/src/modules/achievements/labels";
 import { useAuth } from "@/src/modules/auth";
 import { clsx } from "clsx";
 
 export default function AchievementsPage() {
-    const [mounted, setMounted] = useState(false);
     const { user } = useAuth();
     
     const { 
@@ -24,27 +24,10 @@ export default function AchievementsPage() {
         error: progressError 
     } = useUserAchievements();
 
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return (
-            <div className="yomu-page-container flex justify-center items-center py-20">
-                <div className="flex flex-col items-center space-y-3">
-                    <div className="w-10 h-10 border-4 border-yomu-primary border-t-transparent rounded-full animate-spin" />
-                    <p className="text-yomu-text-secondary font-medium">Memuat pencapaian...</p>
-                </div>
-            </div>
-        );
-    }
-
     const loading = masterLoading || progressLoading;
     const error = masterError || progressError;
     const isAdmin = user?.role === "ADMIN";
 
-    // Resilient Merge Logic for Daily Missions
     const mergedMissions = dailyMissions.map(mission => {
         const prog = dailyProgress.find(p => p.missionId === mission.id);
         const isCompleted = prog?.completed ?? prog?.isCompleted ?? false;
@@ -55,7 +38,6 @@ export default function AchievementsPage() {
         };
     });
 
-    // Resilient Merge Logic for Achievements
     const mergedAchievements = achievements.map(ach => {
         const prog = progress.find(p => p.achievementId === ach.id);
         const isCompleted = prog?.completed ?? prog?.isCompleted ?? false;
@@ -67,7 +49,6 @@ export default function AchievementsPage() {
         };
     });
 
-    // Sort achievements so completed ones are styled and listed in intuitive ways, or just map them
     const completedCount = mergedAchievements.filter(a => a.completed).length;
 
     return (
@@ -173,7 +154,7 @@ export default function AchievementsPage() {
                                                     <Star size={20} />
                                                 </div>
                                                 <span className="text-[9px] font-bold bg-gray-100 text-yomu-text-secondary px-2 py-0.5 rounded uppercase">
-                                                    {mission.targetType.replace('_', ' ')}
+                                                    {achievementTypeLabel(mission.targetType)}
                                                 </span>
                                             </div>
 
@@ -231,14 +212,7 @@ export default function AchievementsPage() {
                                                 : "border-yomu-border opacity-85 hover:opacity-100 hover:border-yomu-primary/20 hover:shadow-md"
                                             )}
                                         >
-                                            <div className={clsx(
-                                                "w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-md transition-all duration-300", 
-                                                ach.completed 
-                                                ? "bg-gradient-to-br from-yomu-primary to-yomu-primary-dark text-white scale-105" 
-                                                : "bg-gray-100 text-yomu-text-secondary border border-gray-200"
-                                            )}>
-                                                <Award size={34} />
-                                            </div>
+                                            <AchievementBadge type={ach.type} completed={ach.completed} />
                                             <div className="flex-grow w-full space-y-3">
                                                 <div className="space-y-1">
                                                     <div className="flex flex-wrap items-center gap-2">
@@ -247,7 +221,7 @@ export default function AchievementsPage() {
                                                             "text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider",
                                                             ach.completed ? "bg-yomu-primary-light text-yomu-primary" : "bg-gray-100 text-yomu-text-secondary"
                                                         )}>
-                                                            {ach.type.replace('_', ' ')}
+                                                            {achievementTypeLabel(ach.type)}
                                                         </span>
                                                     </div>
                                                     <p className="text-xs text-yomu-text-secondary leading-relaxed">{ach.description}</p>

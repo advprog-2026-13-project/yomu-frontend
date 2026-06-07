@@ -205,7 +205,7 @@ export default function AdminSocialPage() {
                                     {(members[clan.id] || []).map((m) => (
                                         <div key={m.userId} className="flex items-center justify-between p-2 bg-background rounded border mb-1">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-sm">{m.userId.slice(0, 8)}...</span>
+                                                <span className="text-sm">{m.username ?? `${m.userId.slice(0, 8)}…`}</span>
                                                 <span className="text-xs px-2 py-0.5 rounded bg-muted">{m.role}</span>
                                             </div>
                                             <Button variant="ghost" size="sm" onClick={() => handleRemoveMember(clan.id, m.userId)} disabled={actionLoading === `remove-${m.userId}`}>
