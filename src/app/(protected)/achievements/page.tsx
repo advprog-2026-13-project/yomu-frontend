@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Trophy, Target, Award, Star, ArrowRight, Calendar, Loader2 } from "lucide-react";
 import { useMasterAchievements, useUserAchievements } from "@/src/modules/achievements/hooks";
 import { AchievementBadge } from "@/src/modules/achievements/components/AchievementBadge";
@@ -9,7 +9,6 @@ import { useAuth } from "@/src/modules/auth";
 import { clsx } from "clsx";
 
 export default function AchievementsPage() {
-    const [mounted, setMounted] = useState(false);
     const { user } = useAuth();
     
     const { 
@@ -25,22 +24,6 @@ export default function AchievementsPage() {
         loading: progressLoading, 
         error: progressError 
     } = useUserAchievements();
-
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- false positive: fires once on mount (deps=[])
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if (!mounted) {
-        return (
-            <div className="yomu-page-container flex justify-center items-center py-20">
-                <div className="flex flex-col items-center space-y-3">
-                    <div className="w-10 h-10 border-4 border-yomu-primary border-t-transparent rounded-full animate-spin" />
-                    <p className="text-yomu-text-secondary font-medium">Memuat pencapaian...</p>
-                </div>
-            </div>
-        );
-    }
 
     const loading = masterLoading || progressLoading;
     const error = masterError || progressError;

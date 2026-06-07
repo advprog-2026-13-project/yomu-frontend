@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
     Plus, Swords, UserPlus, UserMinus, ChevronDown, ChevronUp, ChevronRight,
     RefreshCw, Trophy, Copy, Check, Trash2, Shield, Star, Crown,
@@ -91,6 +91,7 @@ export default function SocialPage() {
     const [joinRequests, setJoinRequests] = useState<JoinRequest[]>([]);
     const [showRequests, setShowRequests] = useState(false);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [initialized, setInitialized] = useState(false);
 
     const checkMyClan = async () => {
         setLoading(true);
@@ -103,7 +104,10 @@ export default function SocialPage() {
         }
     };
 
-    useEffect(() => { checkMyClan(); }, []);
+    if (!initialized) {
+        setInitialized(true);
+        checkMyClan();
+    }
 
     const notify = (msg: string, err = false) => {
         setMessage(msg); setIsError(err);

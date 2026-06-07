@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Trophy, Users, Crown, Star, Shield, Gem, Award, ChevronRight } from "lucide-react";
+import { Users, Crown, Star, Shield, Gem, Award, ChevronRight } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import type { LeaderboardEntry, ClanTier } from "@/src/modules/social/types";
 import { getLeaderboard } from "@/src/modules/social/api";
@@ -81,6 +81,7 @@ export default function LeaderboardPage() {
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [initialized, setInitialized] = useState(false);
 
     const loadData = async (t: ClanTier) => {
         setLoading(true);
@@ -94,7 +95,10 @@ export default function LeaderboardPage() {
         }
     };
 
-    useEffect(() => { loadData(initialTier); }, []);
+    if (!initialized) {
+        setInitialized(true);
+        loadData(initialTier);
+    }
 
     const handleTierChange = (t: ClanTier) => { setTier(t); loadData(t); };
 
